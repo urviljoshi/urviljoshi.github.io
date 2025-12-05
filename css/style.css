@@ -1049,18 +1049,28 @@ button {
    ======================================== */
 .certifications-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
 .cert-card {
     display: flex;
     gap: 1rem;
+    padding: 1.5rem;
+}
+
+.cert-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
 }
 
 .cert-badge {
     font-size: 2rem;
     flex-shrink: 0;
+}
+
+.cert-content {
+    padding: 1.25rem;
 }
 
 .cert-title {
@@ -1289,6 +1299,12 @@ button {
 
 .award-card {
     text-align: center;
+}
+
+.award-image-link {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .award-image {
