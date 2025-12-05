@@ -1,0 +1,3 @@
+<!-- Placeholder: Replace this file with your favicon -->
+<!-- Recommended size: 32x32 or 16x16 pixels -->
+<!-- Format: ICO, PNG -->

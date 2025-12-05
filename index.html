@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Urvil Joshi - Software Engineer II at Harman. Java, Spring Boot, Microservices specialist.">
+    <meta name="keywords" content="Urvil Joshi, Software Engineer, Java Developer, Spring Boot, Backend Developer">
+    <meta name="author" content="Urvil Joshi">
+    <title>Urvil Joshi | Software Engineer</title>
+    
+    <!-- Google Fonts - Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Favicon placeholder -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader">
+            <div class="ball"></div>
+            <div class="ball"></div>
+            <div class="ball"></div>
+        </div>
+        <p class="loader-text">Loading...</p>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-bracket">{</span>
+                <span class="logo-text">UJ</span>
+                <span class="logo-bracket">}</span>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="#hero" class="nav-link active" data-section="hero">Home</a></li>
+                <li><a href="#about" class="nav-link" data-section="about">About</a></li>
+                <li><a href="#skills" class="nav-link" data-section="skills">Skills</a></li>
+                <li><a href="#experience" class="nav-link" data-section="experience">Experience</a></li>
+                <li><a href="#education" class="nav-link" data-section="education">Education</a></li>
+                <li><a href="#certifications" class="nav-link" data-section="certifications">Certifications</a></li>
+                <li><a href="#projects" class="nav-link" data-section="projects">Projects</a></li>
+                <li><a href="#publications" class="nav-link" data-section="publications">Publications</a></li>
+                <li><a href="#awards" class="nav-link" data-section="awards">Awards</a></li>
+                <li><a href="#contact" class="nav-link" data-section="contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/urviljoshi/" class="social-link" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                </a>
+                <a href="https://www.youtube.com/@fluxstack" class="social-link" title="YouTube - FluxStack" target="_blank" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                </a>
+                <a href="mailto:urvvil08@gmail.com" class="social-link" title="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Theme Toggle -->
+            <div class="theme-toggle-wrapper">
+                <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                    <span class="theme-icon sun">☀️</span>
+                    <span class="theme-icon moon">🌙</span>
+                    <span class="toggle-slider"></span>
+                </button>
+            </div>
+
+            <!-- Download Resume Button -->
+            <a href="assets/resume.pdf" class="btn btn-resume" download title="Download Resume">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Resume</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Mobile Hamburger Menu -->
+    <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="section hero">
+            <div class="floating-shapes">
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+                <div class="shape"></div>
+            </div>
+            <div class="hero-content animate-on-scroll">
+                <p class="hero-greeting">Hello, I'm</p>
+                <h1 class="hero-title gradient-text">Urvil Joshi</h1>
+                <div class="hero-subtitle">
+                    <span class="typing-prefix">&gt; </span>
+                    <span class="typing-text" id="typingText"></span>
+                    <span class="typing-cursor">|</span>
+                </div>
+                <p class="hero-tagline">Building scalable & reliable software applications</p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary">Get in Touch</a>
+                    <a href="#projects" class="btn btn-secondary">View Projects</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section about">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">01.</span> About Me
+                </h2>
+                <div class="about-content">
+                    <div class="about-image animate-on-scroll slide-left">
+                        <div class="image-wrapper">
+                            <img src="images/profile.jpg" alt="Urvil Joshi" loading="lazy">
+                            <div class="image-border"></div>
+                        </div>
+                    </div>
+                    <div class="about-text animate-on-scroll slide-right">
+                        <p>
+                            Results-driven engineering professional with experience in software development. 
+                            Motivated self-starter with strong analytical and problem-solving skills, 
+                            and able to grasp new technologies.
+                        </p>
+                        <p>
+                            Able to complete tasks and produce deliverables within tight time schedules. 
+                            Passionate about building scalable and reliable software applications and have 
+                            a demonstrated history of working in the information technology and services industry.
+                        </p>
+                        <div class="about-info">
+                            <div class="info-item">
+                                <span class="info-label">Name:</span>
+                                <span class="info-value">Urvil Joshi</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Role:</span>
+                                <span class="info-value">Software Engineer II</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Company:</span>
+                                <span class="info-value">HARMAN International</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Experience:</span>
+                                <span class="info-value">7+ Years</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section skills">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">02.</span> Technical Skills
+                </h2>
+                <div class="skills-grid animate-on-scroll stagger-children">
+                    <!-- Languages -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Languages</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="Java">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">☕</span>
+                                </div>
+                                <span class="tech-name">Java</span>
+                            </div>
+                            <div class="tech-icon" title="SQL">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🗃️</span>
+                                </div>
+                                <span class="tech-name">SQL</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frameworks -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Frameworks</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="Spring Boot">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🍃</span>
+                                </div>
+                                <span class="tech-name">Spring Boot</span>
+                            </div>
+                            <div class="tech-icon" title="Spring Data">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">📊</span>
+                                </div>
+                                <span class="tech-name">Spring Data</span>
+                            </div>
+                            <div class="tech-icon" title="Spring Security">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🔐</span>
+                                </div>
+                                <span class="tech-name">Spring Security</span>
+                            </div>
+                            <div class="tech-icon" title="Spring MVC">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🌐</span>
+                                </div>
+                                <span class="tech-name">Spring MVC</span>
+                            </div>
+                            <div class="tech-icon" title="Hibernate">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🐻</span>
+                                </div>
+                                <span class="tech-name">Hibernate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Databases -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Databases</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="MySQL">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🐬</span>
+                                </div>
+                                <span class="tech-name">MySQL</span>
+                            </div>
+                            <div class="tech-icon" title="PostgreSQL">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🐘</span>
+                                </div>
+                                <span class="tech-name">PostgreSQL</span>
+                            </div>
+                            <div class="tech-icon" title="MongoDB">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🍃</span>
+                                </div>
+                                <span class="tech-name">MongoDB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practices & Tools -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Practices & Tools</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="REST APIs">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🔗</span>
+                                </div>
+                                <span class="tech-name">REST APIs</span>
+                            </div>
+                            <div class="tech-icon" title="Microservices">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🧩</span>
+                                </div>
+                                <span class="tech-name">Microservices</span>
+                            </div>
+                            <div class="tech-icon" title="Swagger">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">📝</span>
+                                </div>
+                                <span class="tech-name">Swagger</span>
+                            </div>
+                            <div class="tech-icon" title="Apache Kafka">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">📨</span>
+                                </div>
+                                <span class="tech-name">Apache Kafka</span>
+                            </div>
+                            <div class="tech-icon" title="Keycloak">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🔑</span>
+                                </div>
+                                <span class="tech-name">Keycloak</span>
+                            </div>
+                            <div class="tech-icon" title="Docker">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🐳</span>
+                                </div>
+                                <span class="tech-name">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Build & VCS -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Build & VCS</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="Maven">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">📦</span>
+                                </div>
+                                <span class="tech-name">Maven</span>
+                            </div>
+                            <div class="tech-icon" title="Git">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🔀</span>
+                                </div>
+                                <span class="tech-name">Git</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other -->
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">Other</h3>
+                        <div class="tech-grid">
+                            <div class="tech-icon" title="Data Structures">
+                                <div class="icon-wrapper">
+                                    <span class="icon-text">🌳</span>
+                                </div>
+                                <span class="tech-name">Data Structures</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="section experience">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">03.</span> Work Experience
+                </h2>
+                <div class="timeline">
+                    <!-- HARMAN -->
+                    <div class="timeline-item animate-on-scroll">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content glass-card">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Software Engineer II</h3>
+                                <span class="timeline-company">HARMAN International</span>
+                            </div>
+                            <span class="timeline-date">Oct 2022 - Present · 3 yrs 3 mos</span>
+                            <span class="timeline-type">Full-time</span>
+                            <p class="timeline-project">
+                                <strong>Project:</strong> Harman Ignite
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mindtree - Technical Specialist -->
+                    <div class="timeline-item animate-on-scroll">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content glass-card">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Technical Specialist</h3>
+                                <span class="timeline-company">Mindtree</span>
+                            </div>
+                            <span class="timeline-date">Jan 2022 - Oct 2022 · 10 mos</span>
+                            <p class="timeline-project">
+                                <strong>Project:</strong> MOSIP (Modular Open Source Identity Platform)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mindtree - Senior Software Developer -->
+                    <div class="timeline-item animate-on-scroll">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content glass-card">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Senior Software Developer</h3>
+                                <span class="timeline-company">Mindtree</span>
+                            </div>
+                            <span class="timeline-date">Jan 2020 - Dec 2021 · 2 yrs</span>
+                            <span class="timeline-location">Greater Bengaluru Area</span>
+                            <p class="timeline-project">
+                                <strong>Project:</strong> MOSIP (Modular Open Source Identity Platform)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mindtree - Software Developer -->
+                    <div class="timeline-item animate-on-scroll">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content glass-card">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Software Developer</h3>
+                                <span class="timeline-company">Mindtree</span>
+                            </div>
+                            <span class="timeline-date">Feb 2018 - Dec 2019 · 1 yr 11 mos</span>
+                            <span class="timeline-location">Bangalore</span>
+                            <p class="timeline-project">
+                                <strong>Project:</strong> MOSIP (Modular Open Source Identity Platform)
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- HPE Intern -->
+                    <div class="timeline-item animate-on-scroll">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content glass-card">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Intern</h3>
+                                <span class="timeline-company">Hewlett Packard Enterprise</span>
+                            </div>
+                            <span class="timeline-date">May 2016 - Aug 2016 · 4 mos</span>
+                            <span class="timeline-location">Jaipur, Rajasthan, India</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section education">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">04.</span> Education
+                </h2>
+                <div class="education-card glass-card animate-on-scroll">
+                    <div class="education-icon">🎓</div>
+                    <div class="education-content">
+                        <h3 class="education-degree">Bachelor of Engineering (B.E.)</h3>
+                        <p class="education-field">Computer Science</p>
+                        <p class="education-institution">GIT Jaipur</p>
+                        <p class="education-duration">2013 - 2017</p>
+                        <p class="education-grade">Grade: 69% overall</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="section certifications">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">05.</span> Certifications
+                </h2>
+                <div class="certifications-grid">
+                    <!-- Cert 1 -->
+                    <div class="cert-card glass-card animate-on-scroll">
+                        <div class="cert-badge">🏆</div>
+                        <div class="cert-content">
+                            <h3 class="cert-title">Mastering Java Reactive Programming [From Scratch]</h3>
+                            <p class="cert-issuer">Udemy</p>
+                            <p class="cert-date">Issued Jan 2025</p>
+                            <p class="cert-id">Credential ID: UC-437758c8-b85e-41e5-94e1-8cdb22af88d2</p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Java</span>
+                            </div>
+                            <a href="#" class="cert-link">Show credential →</a>
+                        </div>
+                    </div>
+
+                    <!-- Cert 2 -->
+                    <div class="cert-card glass-card animate-on-scroll">
+                        <div class="cert-badge">🏆</div>
+                        <div class="cert-content">
+                            <h3 class="cert-title">Parallel Programming in Java</h3>
+                            <p class="cert-issuer">Rice University</p>
+                            <p class="cert-date">Issued Oct 2021</p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Java</span>
+                            </div>
+                            <a href="#" class="cert-link">Show credential →</a>
+                        </div>
+                    </div>
+
+                    <!-- Cert 3 -->
+                    <div class="cert-card glass-card animate-on-scroll">
+                        <div class="cert-badge">🏆</div>
+                        <div class="cert-content">
+                            <h3 class="cert-title">Programming for Everybody (Getting Started with Python)</h3>
+                            <p class="cert-issuer">University of Michigan</p>
+                            <p class="cert-date">Issued Nov 2019</p>
+                            <div class="cert-skills">
+                                <span class="skill-tag">Python</span>
+                            </div>
+                            <a href="#" class="cert-link">Show credential →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section projects">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">06.</span> Projects
+                </h2>
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card glass-card animate-on-scroll">
+                        <div class="project-image">
+                            <img src="images/projects/harman-ignite.png" alt="Harman Ignite" loading="lazy">
+                            <div class="project-overlay">
+                                <a href="https://car.harman.com/solutions/automotive-engineering-services" class="project-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">Harman Ignite</h3>
+                            <p class="project-company">HARMAN International</p>
+                            <p class="project-duration">Oct 2022 - Present</p>
+                            <p class="project-description">
+                                Connected car platform providing advanced automotive solutions and services.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card glass-card animate-on-scroll">
+                        <div class="project-image">
+                            <img src="images/projects/mosip.png" alt="MOSIP" loading="lazy">
+                            <div class="project-overlay">
+                                <a href="https://www.mosip.io/" class="project-link" target="_blank" rel="noopener noreferrer">View Project →</a>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">Modular Open Source Identity Platform (MOSIP)</h3>
+                            <p class="project-company">Mindtree</p>
+                            <p class="project-duration">Feb 2018 - Oct 2022</p>
+                            <p class="project-description">
+                                MOSIP helps Governments and other user organizations implement a digital, 
+                                foundational identity system in a cost effective way. Nations can use MOSIP 
+                                freely to build their own identity systems. Being modular in its architecture, 
+                                MOSIP provides flexibility to countries in how they implement and configure 
+                                their systems, and helps avoid vendor lock-in. MOSIP harnesses the power of 
+                                open source and embraces the best practices of scalability, security and privacy.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="section publications">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">07.</span> Publications
+                </h2>
+                <div class="publications-list">
+                    <!-- Pub 1 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Oct</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/docker-model-runner-run-ai-models-locally-within-your-docker-ecosystem-8af7a8d1182f" target="_blank" rel="noopener noreferrer">
+                                    Docker Model Runner: Run AI Models Locally Within Your Docker Ecosystem
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+
+                    <!-- Pub 2 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Feb</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/understanding-false-sharing-and-how-to-mitigate-it-in-java-3890ec3f99ed" target="_blank" rel="noopener noreferrer">
+                                    Understanding False Sharing and How to Mitigate It in Java
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+
+                    <!-- Pub 3 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Feb</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/understanding-and-preventing-deadlocks-in-java-a-comprehensive-guide-30e5502c4eb4" target="_blank" rel="noopener noreferrer">
+                                    Understanding and Preventing Deadlocks in Java: A Comprehensive Guide
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+
+                    <!-- Pub 4 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Jan</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/deadlocks-in-java-understanding-the-concurrency-nightmare" target="_blank" rel="noopener noreferrer">
+                                    Deadlocks in Java: Understanding the Concurrency Nightmare
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+
+                    <!-- Pub 5 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Jan</span>
+                            <span class="pub-year">2025</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/thread-local-storage-in-java-a-developers-guide-to-thread-isolated-data" target="_blank" rel="noopener noreferrer">
+                                    Thread-Local Storage in Java: A Developer's Guide to Thread-Isolated Data
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+
+                    <!-- Pub 6 -->
+                    <article class="publication-item animate-on-scroll">
+                        <div class="publication-date">
+                            <span class="pub-month">Jul</span>
+                            <span class="pub-year">2024</span>
+                        </div>
+                        <div class="publication-content">
+                            <h3 class="publication-title">
+                                <a href="https://medium.com/@urvvil08/java-virtual-threads" target="_blank" rel="noopener noreferrer">
+                                    Java Virtual Threads
+                                </a>
+                            </h3>
+                            <p class="publication-platform">Medium</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Awards Section -->
+        <section id="awards" class="section awards">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">08.</span> Honors & Awards
+                </h2>
+                <div class="awards-grid">
+                    <!-- Award 1 -->
+                    <div class="award-card glass-card animate-on-scroll">
+                        <div class="award-image">
+                            <img src="images/awards/outstanding.jpg" alt="Outstanding Performance Award" loading="lazy">
+                        </div>
+                        <div class="award-content">
+                            <h3 class="award-title">Outstanding Performance Award</h3>
+                            <p class="award-issuer">Mindtree</p>
+                        </div>
+                    </div>
+
+                    <!-- Award 2 -->
+                    <div class="award-card glass-card animate-on-scroll">
+                        <div class="award-image">
+                            <img src="images/awards/mosip-contribution.jpg" alt="Outstanding Contribution" loading="lazy">
+                        </div>
+                        <div class="award-content">
+                            <h3 class="award-title">Outstanding Contribution</h3>
+                            <p class="award-issuer">MOSIP</p>
+                            <p class="award-description">Honored by Legend Dame Wendy Hall for Outstanding contribution to MOSIP</p>
+                        </div>
+                    </div>
+
+                    <!-- Award 3 -->
+                    <div class="award-card glass-card animate-on-scroll">
+                        <div class="award-image">
+                            <img src="images/awards/star.jpg" alt="Star Award" loading="lazy">
+                        </div>
+                        <div class="award-content">
+                            <h3 class="award-title">Star Award</h3>
+                            <p class="award-issuer">Mindtree</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section contact">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">
+                    <span class="title-number">09.</span> Get In Touch
+                </h2>
+                <div class="contact-content animate-on-scroll">
+                    <p class="contact-text">
+                        I'm currently open to new opportunities and collaborations. 
+                        Whether you have a question, a project idea, or just want to say hi, 
+                        feel free to reach out!
+                    </p>
+                    <div class="contact-info">
+                        <a href="mailto:urvvil08@gmail.com" class="contact-item">
+                            <span class="contact-icon">📧</span>
+                            <span class="contact-label">urvvil08@gmail.com</span>
+                        </a>
+                        <a href="tel:+917568965601" class="contact-item">
+                            <span class="contact-icon">📱</span>
+                            <span class="contact-label">+91 7568965601</span>
+                        </a>
+                        <a href="#linkedin" class="contact-item" target="_blank" rel="noopener noreferrer">
+                            <span class="contact-icon">💼</span>
+                            <span class="contact-label">linkedin.com/in/urviljoshi</span>
+                        </a>
+                    </div>
+                    <a href="mailto:urvvil08@gmail.com" class="btn btn-primary btn-large">
+                        Say Hello 👋
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p class="footer-text">
+                    Designed & Built by <span class="highlight">Urvil Joshi</span>
+                </p>
+                <p class="footer-copyright">
+                    © 2025 All Rights Reserved
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>
