@@ -779,6 +779,129 @@ kbd {
 .publication-title a:hover { color: var(--primary); }
 .publication-platform { font-family: var(--font-term); font-size: 1.05rem; color: var(--muted); }
 
+.pub-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.pub-tag {
+    font-family: var(--font-term);
+    font-size: 0.95rem;
+    line-height: 1.2;
+    color: var(--text-dim);
+    background: var(--tile);
+    box-shadow: 0 0 0 2px var(--outline);
+    padding: 0.1rem 0.5rem;
+}
+
+/* Shared feed footer (writing + videos) */
+.feed-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+.feed-more { font-family: var(--font-term); font-size: 1.25rem; color: var(--primary); }
+.feed-more:hover { color: var(--amber); }
+.feed-stamp { font-family: var(--font-term); font-size: 1.05rem; color: var(--muted); }
+.feed-empty { font-family: var(--font-term); font-size: 1.25rem; color: var(--text-dim); }
+.feed-empty a { color: var(--primary); }
+.inline-link { color: var(--primary); box-shadow: inset 0 -2px 0 var(--primary); }
+.inline-link:hover { color: var(--amber); box-shadow: inset 0 -2px 0 var(--amber); }
+
+/* ========================================
+   SIDE QUESTS — repo cartridges
+   ======================================== */
+.subsection-title {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    color: var(--text);
+    margin: 3rem 0 1.5rem;
+    line-height: 1.8;
+}
+.cartridge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+.cartridge { display: flex; flex-direction: column; padding: 1.25rem; }
+.cartridge:hover { transform: translate(-3px, -3px); background: var(--tile); }
+.cartridge-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+.cartridge-ic { width: 18px; height: 18px; color: var(--primary); flex-shrink: 0; }
+.cartridge-name { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.cartridge-lang {
+    font-family: var(--font-term);
+    font-size: 1rem;
+    color: var(--muted);
+    margin-left: auto;
+}
+.cartridge-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; flex: 1; }
+.cartridge-cta { font-family: var(--font-term); font-size: 1.15rem; color: var(--primary); margin-top: 1rem; }
+.cartridge:hover .cartridge-cta { color: var(--amber); }
+
+/* ========================================
+   VIDEOS — FluxStack broadcasts
+   ======================================== */
+.section-lede {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    max-width: 640px;
+    margin: -1rem 0 2.25rem;
+}
+.section-lede strong { color: var(--primary); font-weight: 700; }
+.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 2rem; }
+.video-card { display: flex; flex-direction: column; overflow: hidden; }
+.video-card:hover { transform: translate(-3px, -3px); }
+.video-thumb {
+    position: relative;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-bottom: 4px solid var(--outline);
+    background: var(--tile);
+}
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-norm); }
+.video-card:hover .video-thumb img { transform: scale(1.06); }
+.video-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    color: var(--text);
+    background: rgba(12, 12, 24, 0.45);
+    opacity: 0;
+    transition: opacity var(--t-fast);
+}
+.video-card:hover .video-play { opacity: 1; }
+.video-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: var(--font-term);
+    font-size: 1rem;
+    line-height: 1.2;
+    color: var(--outline);
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--outline);
+    padding: 0 0.4rem;
+}
+.video-body { padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+.video-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--text);
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.video-card:hover .video-title { color: var(--primary); }
+.video-meta {
+    display: flex;
+    gap: 0.75rem;
+    font-family: var(--font-term);
+    font-size: 1.05rem;
+    color: var(--muted);
+}
+
 /* ========================================
    AWARDS — achievements
    ======================================== */
@@ -922,6 +1045,9 @@ kbd {
     .publication-item { flex-direction: column; gap: 0.75rem; }
     .publication-date { flex-direction: row; gap: 0.5rem; align-self: flex-start; }
     .pub-year { margin-top: 0; }
+    .video-grid { grid-template-columns: 1fr; }
+    .cartridge-grid { grid-template-columns: 1fr; }
+    .section-lede { margin-top: -0.5rem; }
 }
 
 @media (max-width: 480px) {

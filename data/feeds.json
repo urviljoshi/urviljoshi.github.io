@@ -1,0 +1,219 @@
+{
+  "generated": "2026-09-19T07:20:05.904Z",
+  "channel": {
+    "name": "FluxStack",
+    "url": "https://www.youtube.com/@fluxstack"
+  },
+  "blog": {
+    "name": "Medium",
+    "url": "https://medium.com/@urvvil08"
+  },
+  "posts": [
+    {
+      "title": "10 Claude Code Features Every Dev Should Know",
+      "url": "https://medium.com/@urvvil08/10-claude-code-features-for-daily-work-4b3316b32dee",
+      "date": "2026-06-22T06:41:14.000Z",
+      "tags": [
+        "claude-code",
+        "software-development",
+        "developer-tools"
+      ]
+    },
+    {
+      "title": "I Built My Own Spec-Driven Dev Workflow in Claude Code. Here’s What I Learned.",
+      "url": "https://medium.com/@urvvil08/i-built-my-own-spec-driven-dev-workflow-in-claude-code-heres-what-i-learned-d7e537b88438",
+      "date": "2026-05-26T04:58:04.000Z",
+      "tags": [
+        "spec-driven-development",
+        "software-engineering",
+        "developer-tools"
+      ]
+    },
+    {
+      "title": "I tried Pi after watching its founder explain why he quit Claude Code",
+      "url": "https://medium.com/@urvvil08/i-tried-pi-after-watching-its-founder-explain-why-he-quit-claude-code-7b747c37fa22",
+      "date": "2026-05-07T06:11:29.000Z",
+      "tags": [
+        "ai-coding-tool",
+        "claude-code",
+        "pi-coding-agent"
+      ]
+    },
+    {
+      "title": "I Built an Orchestrator AI Agent That Takes My Github issue to Pull Requests.",
+      "url": "https://medium.com/@urvvil08/built-an-orchestrator-ai-agent-that-takes-my-issue-to-pull-requests-ab1912c93b52",
+      "date": "2026-04-28T13:09:05.000Z",
+      "tags": [
+        "spring-boot",
+        "ai-agent",
+        "claude-code"
+      ]
+    },
+    {
+      "title": "Andrej Karpathy’s LLM Wiki: Create your own knowledge base",
+      "url": "https://medium.com/@urvvil08/andrej-karpathys-llm-wiki-create-your-own-knowledge-base-8779014accd5",
+      "date": "2026-04-20T04:50:08.000Z",
+      "tags": [
+        "artificial-intelligence",
+        "productivity",
+        "rags"
+      ]
+    },
+    {
+      "title": "Karpathy’s Auto Research and its application beyond ML",
+      "url": "https://medium.com/@urvvil08/karpathys-auto-research-and-its-application-beyond-ml-7078cdf27a9d",
+      "date": "2026-04-13T04:53:16.000Z",
+      "tags": [
+        "ai",
+        "autoresearch",
+        "autonomous-ai"
+      ]
+    },
+    {
+      "title": "7 Git Concepts That Will Boost Your Productivity Exponentially",
+      "url": "https://medium.com/@urvvil08/7-git-concepts-that-will-boost-your-productivity-exponentially-c4d25d7c6678",
+      "date": "2026-03-28T23:44:37.000Z",
+      "tags": [
+        "git-productivity",
+        "git",
+        "git-tip-and-tricks"
+      ]
+    },
+    {
+      "title": "Canonical Log Lines Stripe Brilliant Technique for Production Observability",
+      "url": "https://medium.com/@urvvil08/canonical-log-lines-stripe-brilliant-technique-for-production-observability-4bc3cb534c59",
+      "date": "2026-03-17T13:38:47.000Z",
+      "tags": []
+    },
+    {
+      "title": "Docker Model Runner: Run AI Models Locally Within Your Docker Ecosystem",
+      "url": "https://medium.com/@urvvil08/docker-model-runner-run-ai-models-locally-within-your-docker-ecosystem-8af7a8d1182f",
+      "date": "2025-10-07T12:50:59.000Z",
+      "tags": [
+        "local-llm",
+        "ai",
+        "devops"
+      ]
+    },
+    {
+      "title": "Understanding False Sharing and How to Mitigate It in Java",
+      "url": "https://medium.com/@urvvil08/understanding-false-sharing-and-how-to-mitigate-it-in-java-3890ec3f99ed",
+      "date": "2025-02-08T17:06:53.000Z",
+      "tags": [
+        "false-sharing",
+        "multithreading-in-java",
+        "multithreading"
+      ]
+    }
+  ],
+  "videos": [
+    {
+      "id": "nRSikmfa8-M",
+      "title": "Claude Opus 5 Made Me Perlin Noise Flow Field #claudeopus5 #claudeai #shorts",
+      "url": "https://www.youtube.com/watch?v=nRSikmfa8-M",
+      "thumbnail": "https://i.ytimg.com/vi/nRSikmfa8-M/hqdefault.jpg",
+      "date": "2026-07-25T23:30:18.000Z",
+      "views": 249,
+      "short": true
+    },
+    {
+      "id": "Ar6jPiyQPF8",
+      "title": "I Made 3 AIs Rebuild My Coffee Timer ☕ You Pick the Winner (1, 2 or 3?) #claude #chatgpt #ai",
+      "url": "https://www.youtube.com/watch?v=Ar6jPiyQPF8",
+      "thumbnail": "https://i.ytimg.com/vi/Ar6jPiyQPF8/hqdefault.jpg",
+      "date": "2026-07-05T00:16:21.000Z",
+      "views": 146,
+      "short": false
+    },
+    {
+      "id": "3DFJEGCKcJA",
+      "title": "The Creator of Claude Code Doesn't Prompt Anymore #claudecode #promptengineering #aiagents",
+      "url": "https://www.youtube.com/watch?v=3DFJEGCKcJA",
+      "thumbnail": "https://i.ytimg.com/vi/3DFJEGCKcJA/hqdefault.jpg",
+      "date": "2026-06-28T23:08:25.000Z",
+      "views": 614,
+      "short": false
+    },
+    {
+      "id": "LW40ODqdEhA",
+      "title": "I made Claude interrogate ME before it wrote any code 🔥 #shorts",
+      "url": "https://www.youtube.com/watch?v=LW40ODqdEhA",
+      "thumbnail": "https://i.ytimg.com/vi/LW40ODqdEhA/hqdefault.jpg",
+      "date": "2026-06-28T02:06:00.000Z",
+      "views": 941,
+      "short": true
+    },
+    {
+      "id": "W5VsRnvD0pQ",
+      "title": "Claude Code Getting Dumber? Fix It (10 Features) #shorts",
+      "url": "https://www.youtube.com/watch?v=W5VsRnvD0pQ",
+      "thumbnail": "https://i.ytimg.com/vi/W5VsRnvD0pQ/hqdefault.jpg",
+      "date": "2026-06-24T19:30:19.000Z",
+      "views": 834,
+      "short": true
+    },
+    {
+      "id": "NLyEoDtbmdw",
+      "title": "10 Claude Code Features Most Devs Don't Use (But Should)",
+      "url": "https://www.youtube.com/watch?v=NLyEoDtbmdw",
+      "thumbnail": "https://i.ytimg.com/vi/NLyEoDtbmdw/hqdefault.jpg",
+      "date": "2026-06-22T06:35:26.000Z",
+      "views": 125,
+      "short": false
+    },
+    {
+      "id": "wpSsVULBIxI",
+      "title": "I Asked the New Claude Fable 5 to Code a Satisfying Simulation 🤯#shorts #fable5 #anthropic",
+      "url": "https://www.youtube.com/watch?v=wpSsVULBIxI",
+      "thumbnail": "https://i.ytimg.com/vi/wpSsVULBIxI/hqdefault.jpg",
+      "date": "2026-06-10T00:42:37.000Z",
+      "views": 1025,
+      "short": true
+    },
+    {
+      "id": "NF4pLEVLHRQ",
+      "title": "Claude Code Dynamic Workflows: Create An Army Of Agents #shorts #claudecode #aicoding",
+      "url": "https://www.youtube.com/watch?v=NF4pLEVLHRQ",
+      "thumbnail": "https://i.ytimg.com/vi/NF4pLEVLHRQ/hqdefault.jpg",
+      "date": "2026-06-07T23:12:41.000Z",
+      "views": 743,
+      "short": true
+    },
+    {
+      "id": "BLdpDLoKys0",
+      "title": "Your Claude Code terminal is BORING (30s fix) #shorts #claudecode",
+      "url": "https://www.youtube.com/watch?v=BLdpDLoKys0",
+      "thumbnail": "https://i.ytimg.com/vi/BLdpDLoKys0/hqdefault.jpg",
+      "date": "2026-06-06T02:19:15.000Z",
+      "views": 498,
+      "short": true
+    },
+    {
+      "id": "kCjJH4nzkFE",
+      "title": "Stop guessing which AI your laptop can run 🤯#shorts #localllm #ollama",
+      "url": "https://www.youtube.com/watch?v=kCjJH4nzkFE",
+      "thumbnail": "https://i.ytimg.com/vi/kCjJH4nzkFE/hqdefault.jpg",
+      "date": "2026-06-01T01:44:58.000Z",
+      "views": 235,
+      "short": true
+    },
+    {
+      "id": "FpIYc5o-bx4",
+      "title": "Two HTTP requests just broke my refund endpoint #shorts #claudecode #specdrivendevelopment",
+      "url": "https://www.youtube.com/watch?v=FpIYc5o-bx4",
+      "thumbnail": "https://i.ytimg.com/vi/FpIYc5o-bx4/hqdefault.jpg",
+      "date": "2026-05-28T23:40:41.000Z",
+      "views": 1280,
+      "short": true
+    },
+    {
+      "id": "eqWGzIHNjyw",
+      "title": "I Built a AI Dev Workflow using Spec Driven Development #specdrivendevelopment #claudecode",
+      "url": "https://www.youtube.com/watch?v=eqWGzIHNjyw",
+      "thumbnail": "https://i.ytimg.com/vi/eqWGzIHNjyw/hqdefault.jpg",
+      "date": "2026-05-26T02:30:19.000Z",
+      "views": 374,
+      "short": false
+    }
+  ]
+}

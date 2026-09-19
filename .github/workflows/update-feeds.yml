@@ -1,0 +1,58 @@
+name: Update feeds
+
+# Refreshes data/feeds.json from Medium and YouTube so the site's
+# writing and video sections stay current without manual edits.
+
+on:
+  schedule:
+    # 05:30 UTC daily (11:00 IST)
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/fetch-feeds.mjs'
+      - '.github/workflows/update-feeds.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-feeds
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch feeds
+        run: node scripts/fetch-feeds.mjs
+
+      - name: Commit if changed
+        run: |
+          # The 'generated' timestamp changes every run; only commit when
+          # actual post or video content moved.
+          if git diff --quiet -- data/feeds.json; then
+            echo "no changes"
+            exit 0
+          fi
+
+          before=$(git show HEAD:data/feeds.json 2>/dev/null | jq -S 'del(.generated)' || echo '{}')
+          after=$(jq -S 'del(.generated)' data/feeds.json)
+
+          if [ "$before" = "$after" ]; then
+            echo "only the timestamp moved, skipping commit"
+            git checkout -- data/feeds.json
+            exit 0
+          fi
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/feeds.json
+          git commit -m "chore: refresh Medium and YouTube feeds"
+          git push

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     RippleEffect.init();
     HeroSky.init();
     CommandPalette.init();
+    Feeds.init();
 });
 
 /* ========================================
@@ -202,17 +203,20 @@ const ScrollProgress = {
    ======================================== */
 const ScrollAnimations = {
     init() {
-        this.els = document.querySelectorAll('.animate-on-scroll');
-        if (!this.els.length) return;
-        const observer = new IntersectionObserver((entries) => {
+        this.observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('animate-in');
-                    observer.unobserve(entry.target);
+                    this.observer.unobserve(entry.target);
                 }
             });
         }, { root: null, rootMargin: '0px 0px -80px 0px', threshold: 0.1 });
-        this.els.forEach(el => observer.observe(el));
+        this.observe(document.querySelectorAll('.animate-on-scroll'));
+    },
+    /** Register elements added after init (e.g. feed-rendered cards). */
+    observe(els) {
+        if (!this.observer || !els) return;
+        els.forEach(el => this.observer.observe(el));
     }
 };
 
@@ -354,6 +358,121 @@ const CommandPalette = {
         if (target) target.scrollIntoView({ behavior: 'smooth' });
     }
 };
+
+/* ========================================
+   FEEDS (Medium + YouTube)
+   Reads data/feeds.json, refreshed daily by
+   .github/workflows/update-feeds.yml. The
+   static markup in index.html is the fallback
+   if the file is missing or unreadable.
+   ======================================== */
+const Feeds = {
+    async init() {
+        this.postsEl  = document.getElementById('publicationsList');
+        this.videosEl = document.getElementById('videoGrid');
+        if (!this.postsEl && !this.videosEl) return;
+
+        let data;
+        try {
+            const res = await fetch('data/feeds.json', { cache: 'no-cache' });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            data = await res.json();
+        } catch (err) {
+            console.warn('feeds unavailable, keeping static content:', err.message);
+            this.fallbackVideos();
+            return;
+        }
+
+        if (data.posts && data.posts.length) this.renderPosts(data.posts);
+        if (data.videos && data.videos.length) this.renderVideos(data.videos);
+        else this.fallbackVideos();
+
+        this.stamp('postsStamp', data.posts, data.generated);
+        this.stamp('videosStamp', data.videos, data.generated);
+    },
+
+    renderPosts(posts) {
+        const html = posts.map(p => {
+            const d = new Date(p.date);
+            const tags = (p.tags || []).slice(0, 3)
+                .map(t => `<span class="pub-tag">${esc(t)}</span>`).join('');
+            return `
+            <article class="publication-item animate-on-scroll">
+                <div class="publication-date">
+                    <span class="pub-month">${MONTHS[d.getMonth()]}</span>
+                    <span class="pub-year">${d.getFullYear()}</span>
+                </div>
+                <div class="publication-content">
+                    <h3 class="publication-title">
+                        <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.title)}</a>
+                    </h3>
+                    <p class="publication-platform">&gt; cat medium.com</p>
+                    ${tags ? `<div class="pub-tags">${tags}</div>` : ''}
+                </div>
+            </article>`;
+        }).join('');
+
+        this.postsEl.innerHTML = html;
+        ScrollAnimations.observe(this.postsEl.querySelectorAll('.animate-on-scroll'));
+    },
+
+    renderVideos(videos) {
+        const html = videos.map(v => {
+            const d = new Date(v.date);
+            return `
+            <a class="video-card pixel-box animate-on-scroll" href="${esc(v.url)}" target="_blank" rel="noopener noreferrer">
+                <div class="video-thumb">
+                    <img src="${esc(v.thumbnail)}" alt="" loading="lazy" width="480" height="360">
+                    <span class="video-play" aria-hidden="true">&#9654;</span>
+                    ${v.short ? '<span class="video-badge">short</span>' : ''}
+                </div>
+                <div class="video-body">
+                    <h3 class="video-title">${esc(stripHashtags(v.title))}</h3>
+                    <p class="video-meta">
+                        <span>${MONTHS[d.getMonth()]} ${d.getFullYear()}</span>
+                        ${v.views ? `<span>${formatViews(v.views)} views</span>` : ''}
+                    </p>
+                </div>
+            </a>`;
+        }).join('');
+
+        this.videosEl.innerHTML = html;
+        ScrollAnimations.observe(this.videosEl.querySelectorAll('.animate-on-scroll'));
+    },
+
+    /** No data: send people to the channel rather than showing an empty grid. */
+    fallbackVideos() {
+        if (!this.videosEl || this.videosEl.querySelector('.video-card')) return;
+        this.videosEl.innerHTML =
+            '<p class="feed-empty"><a href="https://www.youtube.com/@fluxstack" target="_blank" rel="noopener noreferrer">Watch the latest videos on YouTube &rarr;</a></p>';
+    },
+
+    stamp(id, items, generated) {
+        const el = document.getElementById(id);
+        if (!el || !items || !items.length || !generated) return;
+        const d = new Date(generated);
+        if (Number.isNaN(d.valueOf())) return;
+        el.textContent = `// synced ${MONTHS[d.getMonth()].toLowerCase()} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+};
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function esc(s = '') {
+    return String(s).replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/** YouTube titles carry trailing hashtag clouds; they add nothing in a card. */
+function stripHashtags(title = '') {
+    return title.replace(/(\s+#[\wÀ-￿-]+)+\s*$/g, '').trim() || title;
+}
+
+function formatViews(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+    return String(n);
+}
 
 /* ========================================
    UTILITIES
