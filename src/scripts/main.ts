@@ -10,7 +10,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
 import { initFlux, type Flux } from './flux';
-import { armPixelate, disarmPixelate } from './pixelate';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -102,14 +101,24 @@ function reveals() {
     });
 
     $$('[data-stagger]').forEach((group) => {
-        gsap.from(group.children, {
-            '--ry': '30px',
+        const items = Array.from(group.children) as HTMLElement[];
+        const cards = items.map((el) => (el.classList.contains('card') ? el : el.querySelector<HTMLElement>('.card'))).filter(Boolean) as HTMLElement[];
+        gsap.from(items, {
+            '--ry': '44px',
             opacity: 0,
-            duration: 0.9,
-            stagger: 0.07,
+            scale: cards.length ? 0.96 : 1,
+            duration: 1,
+            stagger: 0.09,
             ease: 'power3.out',
-            scrollTrigger: { trigger: group, start: 'top 90%', once: true }
+            clearProps: 'scale',
+            scrollTrigger: { trigger: group, start: 'top 88%', once: true },
+            onComplete: () => cards.forEach((c, i) => sheen(c, i * 0.08))
         });
+    });
+
+    // Standalone cards (featured work) get the same sweep once they settle
+    $$('.card[data-reveal]').forEach((card) => {
+        ScrollTrigger.create({ trigger: card, start: 'top 80%', once: true, onEnter: () => sheen(card, 0.5) });
     });
 
     const vids = $$('[data-stagger-item]');
@@ -385,38 +394,133 @@ function micro() {
     });
 }
 
-/* ---------------- direction toggle (prototype only) ---------------- */
+/* ---------------- theme: light / dark with a circular reveal ---------------- */
 
-function directionToggle() {
-    const group = $('[data-compare]');
-    if (!group) return;
-    const buttons = $$<HTMLButtonElement>('[data-set-variant]', group);
-    const themeMeta = $<HTMLMetaElement>('meta[name="theme-color"]');
+const THEME_KEY = 'uj-theme';
+const systemDark = matchMedia('(prefers-color-scheme: dark)');
+const effectiveTheme = () => root.dataset.theme ?? (systemDark.matches ? 'dark' : 'light');
 
-    const apply = (v: string, initial = false) => {
-        root.dataset.variant = v;
-        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setVariant === v)));
-        themeMeta?.setAttribute('content', v === 'pixel' ? '#10101d' : '#0a0f14');
-        flux?.setVariant(v);
-        if (v === 'pixel' && !reduced) armPixelate();
-        else disarmPixelate();
-        try {
-            localStorage.setItem('uj-direction', v);
-        } catch {}
-        // Pixel labels are wider; let pinned sections re-measure
-        if (!initial) setTimeout(() => ScrollTrigger.refresh(), 700);
-    };
+function themeToggle() {
+    const btn = $<HTMLButtonElement>('[data-theme-toggle]');
+    if (!btn) return;
 
-    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.setVariant!)));
+    const label = () => btn.setAttribute('aria-label', `Switch to ${effectiveTheme() === 'dark' ? 'light' : 'dark'} theme`);
+    label();
 
-    let start = 'sleek';
-    if (location.hash === '#pixel') start = 'pixel';
-    else {
-        try {
-            start = localStorage.getItem('uj-direction') ?? 'sleek';
-        } catch {}
+    // Following the OS: keep the field in sync if it changes underneath us
+    systemDark.addEventListener('change', () => {
+        if (!root.dataset.theme) {
+            flux?.retheme();
+            label();
+        }
+    });
+
+    btn.addEventListener('click', (e) => {
+        const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+
+        const apply = () => {
+            root.dataset.theme = next;
+            try {
+                localStorage.setItem(THEME_KEY, next);
+            } catch {}
+            flux?.retheme(true);
+            label();
+        };
+
+        const vt = (document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> } }).startViewTransition;
+        if (reduced || !vt) {
+            apply();
+            return;
+        }
+
+        // The new theme grows out of the button as a circle
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX || r.left + r.width / 2;
+        const y = e.clientY || r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+        root.classList.add('theme-switching');
+        const t = vt.call(document, apply);
+        t.ready.then(() => {
+            root.animate(
+                { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+                { duration: 750, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' }
+            );
+        });
+        t.finished.finally(() => root.classList.remove('theme-switching'));
+    });
+}
+
+/* ---------------- cards: tilt, sheen, parallax ---------------- */
+
+/** One band of light across a card. */
+function sheen(card: HTMLElement, delay = 0) {
+    if (reduced) return;
+    let band = card.querySelector<HTMLElement>(':scope > .card-sheen');
+    if (!band) {
+        band = document.createElement('span');
+        band.className = 'card-sheen';
+        band.setAttribute('aria-hidden', 'true');
+        card.appendChild(band);
     }
-    apply(start === 'pixel' ? 'pixel' : 'sleek', true);
+    gsap.fromTo(
+        band,
+        { xPercent: -100, autoAlpha: 1 },
+        { xPercent: 100, duration: 1.3, ease: 'power2.inOut', delay, onComplete: () => gsap.set(band, { autoAlpha: 0 }) }
+    );
+}
+
+/** 3D tilt toward the cursor, with inner [data-depth] layers drifting for parallax. */
+function tilt() {
+    if (!finePointer || reduced) return;
+
+    $$('[data-tilt]').forEach((el) => {
+        const max = Number(el.dataset.tiltMax ?? 6);
+        const layers = $$('[data-depth]', el).map((node) => ({
+            node,
+            depth: Number(node.dataset.depth),
+            x: gsap.quickTo(node, 'x', { duration: 0.6, ease: 'power3.out' }),
+            y: gsap.quickTo(node, 'y', { duration: 0.6, ease: 'power3.out' })
+        }));
+
+        gsap.set(el, { transformPerspective: 1000 });
+        const rx = gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3.out' });
+        const ry = gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+        const lift = gsap.quickTo(el, 'y', { duration: 0.6, ease: 'power3.out' });
+
+        el.addEventListener('pointerenter', () => lift(-6));
+        el.addEventListener('pointermove', (e) => {
+            const r = el.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            ry(px * max * 2);
+            rx(-py * max * 2);
+            layers.forEach((l) => {
+                l.x(px * l.depth);
+                l.y(py * l.depth);
+            });
+        });
+        el.addEventListener('pointerleave', () => {
+            gsap.to(el, { rotationX: 0, rotationY: 0, y: 0, duration: 1.1, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
+            layers.forEach((l) => gsap.to(l.node, { x: 0, y: 0, duration: 0.9, ease: 'power3.out', overwrite: 'auto' }));
+        });
+    });
+}
+
+/** Images drift slower than the page, so frames feel like windows. */
+function parallax() {
+    if (reduced) return;
+    $$('[data-parallax]').forEach((img) => {
+        gsap.fromTo(
+            img,
+            { yPercent: -6 },
+            {
+                yPercent: 6,
+                ease: 'none',
+                scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true }
+            }
+        );
+    });
 }
 
 /* ---------------- boot ---------------- */
@@ -426,13 +530,15 @@ async function boot() {
     await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1500))]);
     root.classList.add('is-ready');
 
-    directionToggle();
+    themeToggle();
     heroIntro();
     careerScrub();
     reveals();
     navBehaviour();
     rail();
     micro();
+    tilt();
+    parallax();
 
     ScrollTrigger.refresh();
 }

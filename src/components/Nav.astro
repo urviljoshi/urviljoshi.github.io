@@ -25,6 +25,25 @@ const links = [
         </nav>
 
         <div class="nav-actions">
+            <button class="theme-btn" type="button" data-theme-toggle aria-label="Switch colour theme">
+                <svg class="theme-ic" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <mask id="moon-cut">
+                        <rect width="24" height="24" fill="#fff" />
+                        <circle class="theme-cut" cx="24" cy="4" r="8" fill="#000" />
+                    </mask>
+                    <circle class="theme-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#moon-cut)" />
+                    <g class="theme-rays" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="12" y1="1.5" x2="12" y2="3.5" />
+                        <line x1="12" y1="20.5" x2="12" y2="22.5" />
+                        <line x1="1.5" y1="12" x2="3.5" y2="12" />
+                        <line x1="20.5" y1="12" x2="22.5" y2="12" />
+                        <line x1="4.6" y1="4.6" x2="6" y2="6" />
+                        <line x1="18" y1="18" x2="19.4" y2="19.4" />
+                        <line x1="4.6" y1="19.4" x2="6" y2="18" />
+                        <line x1="18" y1="6" x2="19.4" y2="4.6" />
+                    </g>
+                </svg>
+            </button>
             <a href="#contact" class="nav-cta">Contact</a>
             <button class="nav-menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>
                 <span class="sr-only">Open menu</span>
@@ -74,7 +93,7 @@ const links = [
         padding: 0 8px 0 10px;
         border-radius: var(--radius-pill);
         border: 1px solid color-mix(in srgb, var(--line-strong) 70%, transparent);
-        background: color-mix(in srgb, var(--bg) 72%, transparent);
+        background: var(--glass);
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         overflow: hidden;
@@ -100,13 +119,6 @@ const links = [
         transition:
             background-color var(--swap),
             border-radius var(--swap);
-    }
-
-    :global([data-variant='pixel']) .nav-mark-uj {
-        font-family: 'Silkscreen', var(--font-mono);
-        font-weight: 400;
-        font-size: 0.8rem;
-        letter-spacing: 0;
     }
 
     .nav-links {
@@ -170,6 +182,43 @@ const links = [
         transform-origin: left;
         transform: scaleX(0);
         opacity: 0.8;
+    }
+
+    /* Sun in light, moon in dark. --dark is a registered number that the
+       theme tokens set, so the morph tweens on its own. */
+    .theme-btn {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-pill);
+        color: var(--text);
+        transition: background-color 0.3s;
+    }
+
+    .theme-btn:hover {
+        background: var(--surface-2);
+    }
+
+    .theme-ic {
+        transition: --dark 0.6s var(--ease-out);
+        transform: rotate(calc(var(--dark) * 40deg));
+        overflow: visible;
+    }
+
+    .theme-core {
+        transform-origin: 12px 12px;
+        transform: scale(calc(1 + var(--dark) * 0.75));
+    }
+
+    .theme-cut {
+        transform: translate(calc(var(--dark) * -8px), calc(var(--dark) * 4px));
+    }
+
+    .theme-rays {
+        transform-origin: 12px 12px;
+        transform: rotate(calc(var(--dark) * -90deg)) scale(calc(1 - var(--dark)));
+        opacity: calc(1 - var(--dark));
     }
 
     .nav-menu {

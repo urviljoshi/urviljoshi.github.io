@@ -1,34 +1,48 @@
 /* ========================================================================
    Urvil Joshi — design system
-   Two directions share one layout and one motion system:
-     sleek  (default)  ink + periwinkle, soft radii, clean mono labels
-     pixel             indigo + amber, crisp corners, pixel labels, dither
-   Everything visual is a token, so switching direction is one attribute.
+   Sleek, in two themes. Light is the base palette; dark applies from the
+   OS setting unless the visitor picks a theme, which stamps data-theme on
+   <html>. Components only ever read tokens, never raw colours.
    ======================================================================== */
 
-:root {
-    color-scheme: dark;
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
 
-    /* sleek palette */
-    --bg: #0a0f14;
-    --surface: #10171f;
-    --surface-2: #16202b;
-    --line: #1f2b38;
-    --line-strong: #2c3b4b;
-    --text: #e7edf4;
-    --muted: #8c99aa;
-    --accent: #93a9ff;
-    --accent-ink: #0a0f14;
-    --accent-soft: rgba(147, 169, 255, 0.12);
-    --live: #5be3b0;
-    --shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.7);
+/* Registered so the theme icon can tween between sun and moon */
+@property --dark {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+:root {
+    color-scheme: light;
+    --dark: 0;
+
+    /* light palette: cool paper, ink, deep periwinkle */
+    --bg: #f3f5f9;
+    --surface: #ffffff;
+    --surface-2: #e9edf4;
+    --line: #dde3ec;
+    --line-strong: #c3ccd9;
+    --text: #0d131a;
+    --muted: #566273;
+    --accent: #4a5fe0;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(74, 95, 224, 0.1);
+    --live: #0c9c73;
+    --shadow: 0 1px 2px rgba(13, 19, 26, 0.04), 0 8px 24px -12px rgba(13, 19, 26, 0.12);
+    --shadow-lift: 0 2px 4px rgba(13, 19, 26, 0.04), 0 28px 60px -24px rgba(40, 56, 140, 0.32);
+    --glass: rgba(243, 245, 249, 0.72);
 
     /* shape */
-    --radius: 16px;
+    --radius: 18px;
     --radius-sm: 10px;
     --radius-pill: 999px;
     --marble: 50%;
-    --btn-offset: 0 0 0 0 transparent;
 
     /* type */
     --font-display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
@@ -46,32 +60,61 @@
 
     /* motion */
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    --swap: 0.6s var(--ease-out);
+    --swap: 0.5s var(--ease-out);
 }
 
-[data-variant='pixel'] {
-    --bg: #10101d;
-    --surface: #17182b;
-    --surface-2: #1e1f36;
-    --line: #2b2c49;
-    --line-strong: #3b3c63;
-    --text: #f2f0ea;
-    --muted: #9d9cc4;
-    --accent: #ffcd75;
-    --accent-ink: #16162a;
-    --accent-soft: rgba(255, 205, 117, 0.1);
-    --live: #38b764;
-    --shadow: 8px 8px 0 0 rgba(0, 0, 0, 0.45);
+/* dark palette: ink, periwinkle, mint for live states */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+        color-scheme: dark;
+        --dark: 1;
+        --bg: #0a0f14;
+        --surface: #10171f;
+        --surface-2: #16202b;
+        --line: #1f2b38;
+        --line-strong: #2c3b4b;
+        --text: #e7edf4;
+        --muted: #8c99aa;
+        --accent: #93a9ff;
+        --accent-ink: #0a0f14;
+        --accent-soft: rgba(147, 169, 255, 0.12);
+        --live: #5be3b0;
+        --shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 12px 30px -18px rgba(0, 0, 0, 0.7);
+        --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 34px 70px -28px rgba(0, 0, 0, 0.85);
+        --glass: rgba(10, 15, 20, 0.72);
+    }
+}
 
-    --radius: 3px;
-    --radius-sm: 2px;
-    --radius-pill: 3px;
-    --marble: 0;
-    --btn-offset: 4px 4px 0 0 #0c0c18;
+:root[data-theme='dark'] {
+    color-scheme: dark;
+    --dark: 1;
+    --bg: #0a0f14;
+    --surface: #10171f;
+    --surface-2: #16202b;
+    --line: #1f2b38;
+    --line-strong: #2c3b4b;
+    --text: #e7edf4;
+    --muted: #8c99aa;
+    --accent: #93a9ff;
+    --accent-ink: #0a0f14;
+    --accent-soft: rgba(147, 169, 255, 0.12);
+    --live: #5be3b0;
+    --shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 12px 30px -18px rgba(0, 0, 0, 0.7);
+    --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 34px 70px -28px rgba(0, 0, 0, 0.85);
+    --glass: rgba(10, 15, 20, 0.72);
+}
 
-    --font-label: 'Silkscreen', var(--font-mono);
-    --label-size: 0.75rem;
-    --label-track: 0.05em;
+/* Theme switch: the circular reveal is the animation, so freeze
+   per-element colour transitions while it runs */
+.theme-switching,
+.theme-switching * {
+    transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }
 
 /* ---------------- reset ---------------- */
@@ -269,11 +312,10 @@ html.lenis body {
 .btn-primary {
     background: var(--accent);
     color: var(--accent-ink);
-    box-shadow: var(--btn-offset);
 }
 
 .btn-primary:hover {
-    background: var(--text);
+    box-shadow: 0 10px 30px -10px var(--accent);
 }
 
 .btn-ghost {
@@ -330,20 +372,28 @@ html.lenis body {
     color: var(--muted);
 }
 
-/* Cards with a cursor-following spotlight */
+/* ---------------- cards ----------------
+   Layers, bottom to top:
+     ::before     soft fill that follows the cursor
+     ::after      1px border light: traces the cursor on hover, and on
+                  .orbit cards also circles the edge on its own
+     .card-sheen  a band of light that sweeps across once on entry
+   JS adds the 3D tilt (transform); CSS never animates transform here so
+   the two cannot fight. */
 .card {
     position: relative;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    box-shadow: var(--shadow);
     overflow: hidden;
     isolation: isolate;
+    transform-style: flat;
+    will-change: transform;
     transition:
         border-color 0.4s var(--ease-out),
         background-color var(--swap),
-        border-radius var(--swap),
-        transform 0.5s var(--ease-out),
-        box-shadow 0.4s var(--ease-out);
+        box-shadow 0.5s var(--ease-out);
 }
 
 .card::before {
@@ -351,22 +401,85 @@ html.lenis body {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -200px), var(--accent-soft), transparent 60%);
+    background: radial-gradient(460px circle at var(--mx, 50%) var(--my, -300px), var(--accent-soft), transparent 62%);
     opacity: 0;
-    transition: opacity 0.4s;
+    transition: opacity 0.45s;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    z-index: 3;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, -300px), var(--accent), transparent 70%);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.45s;
 }
 
 .card:hover {
     border-color: var(--line-strong);
+    box-shadow: var(--shadow-lift);
 }
 
-.card:hover::before {
+.card:hover::before,
+.card:hover::after {
     opacity: 1;
 }
 
-[data-variant='pixel'] .card:hover {
-    box-shadow: var(--shadow);
-    transform: translate(-3px, -3px);
+/* Ambient: a light that keeps circling the edge of featured cards */
+.card.orbit::after {
+    background:
+        radial-gradient(220px circle at var(--mx, 50%) var(--my, -300px), var(--accent), transparent 70%),
+        conic-gradient(
+            from var(--angle),
+            transparent 0deg 250deg,
+            color-mix(in srgb, var(--accent) 85%, transparent) 300deg,
+            transparent 340deg 360deg
+        );
+    opacity: 0.9;
+    animation: orbit 7s linear infinite;
+}
+
+.card.orbit:hover::after {
+    opacity: 1;
+}
+
+@keyframes orbit {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.card-sheen {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        color-mix(in srgb, var(--accent) 14%, transparent) 48%,
+        color-mix(in srgb, var(--accent) 22%, transparent) 50%,
+        color-mix(in srgb, var(--accent) 14%, transparent) 52%,
+        transparent 60%
+    );
+    opacity: 0;
+}
+
+/* Content inside a tilting card floats slightly, for depth */
+[data-depth] {
+    will-change: transform;
 }
 
 /* Motion is decoration: honour the OS setting everywhere */
@@ -402,7 +515,4 @@ html.lenis body {
     will-change: transform, opacity;
 }
 
-/* Pixel direction: images wait off-screen until they resolve in */
-img.px-pending {
-    opacity: 0;
-}
+

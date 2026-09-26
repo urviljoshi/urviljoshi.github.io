@@ -19,8 +19,8 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
     <div class="rail" data-rail tabindex="0" aria-label="Recent videos">
         {videos.map((v) => (
             <a href={v.url} target="_blank" rel="noopener" class="vid" data-stagger-item>
-                <span class="vid-thumb">
-                    <img src={v.thumbnail} alt="" width="480" height="360" loading="lazy" draggable="false" data-pixelate />
+                <span class="vid-thumb" data-tilt data-tilt-max="8">
+                    <img src={v.thumbnail} alt="" width="480" height="360" loading="lazy" draggable="false" />
                     {v.short && <span class="vid-badge label">Short</span>}
                     <span class="vid-play" aria-hidden="true">
                         <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
@@ -34,7 +34,7 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
             </a>
         ))}
         <a href={channel.url} target="_blank" rel="noopener" class="vid vid-more">
-            <span class="vid-more-inner">
+            <span class="vid-more-inner card orbit" data-spotlight>
                 <span class="label">Channel</span>
                 <span class="vid-more-title">Everything on FluxStack</span>
                 <span class="btn btn-primary">Subscribe <span class="arrow" aria-hidden="true">&rarr;</span></span>
@@ -118,6 +118,8 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
     .vid-thumb {
         position: relative;
         display: block;
+        box-shadow: var(--shadow);
+        will-change: transform;
         aspect-ratio: 16 / 9;
         max-width: 100%;
         border-radius: var(--radius);
@@ -135,7 +137,11 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
     }
 
     .vid:hover .vid-thumb img {
-        transform: scale(1.05);
+        transform: scale(1.06);
+    }
+
+    .vid:hover .vid-thumb {
+        box-shadow: var(--shadow-lift);
     }
 
     .vid-badge {
@@ -211,9 +217,7 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
         height: 100%;
         min-height: 200px;
         padding: 28px;
-        border: 1px dashed var(--line-strong);
-        border-radius: var(--radius);
-        transition: border-radius var(--swap);
+        border-style: dashed;
     }
 
     .vid-more-title {

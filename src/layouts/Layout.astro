@@ -5,13 +5,11 @@ import { person, socials } from '../data/content';
 interface Props {
     title?: string;
     description?: string;
-    variant?: 'sleek' | 'pixel';
 }
 
 const {
     title = `${person.name} | Software Engineer`,
-    description = 'Software Engineer II at HARMAN. Java, Spring Boot and microservices, plus writing and videos on AI-assisted development.',
-    variant = 'sleek'
+    description = 'Software Engineer II at HARMAN. Java, Spring Boot and microservices, plus writing and videos on AI-assisted development.'
 } = Astro.props;
 
 const site = Astro.site?.toString() ?? 'https://urviljoshi.github.io/';
@@ -31,14 +29,22 @@ const personLd = {
 ---
 
 <!doctype html>
-<html lang="en" data-variant={variant}>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="author" content={person.name} />
-        <meta name="theme-color" content="#0a0f14" />
+        <meta name="theme-color" content="#f3f5f9" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0a0f14" media="(prefers-color-scheme: dark)" />
+        <script is:inline>
+            // Apply a saved theme before first paint so there is no flash
+            try {
+                var t = localStorage.getItem('uj-theme');
+                if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+            } catch (e) {}
+        </script>
         <link rel="canonical" href={site} />
 
         <meta property="og:type" content="website" />
@@ -60,7 +66,7 @@ const personLd = {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist+Mono:wght@400;500&family=Onest:wght@400;500;600&family=Silkscreen&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist+Mono:wght@400;500&family=Onest:wght@400;500;600&display=swap"
         />
 
         <link

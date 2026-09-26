@@ -11,9 +11,9 @@ import { work, sideProjects, monthYear, duration } from '../data/content';
 
         <div class="feature-grid">
             {work.map((w) => (
-                <a href={w.href} target="_blank" rel="noopener" class="feature card" data-reveal data-spotlight>
+                <a href={w.href} target="_blank" rel="noopener" class="feature card orbit" data-reveal data-spotlight data-tilt>
                     <div class="feature-top">
-                        <span class="feature-logo">
+                        <span class="feature-logo" data-depth="16">
                             <img src={w.logo} alt="" loading="lazy" />
                         </span>
                         <span class="feature-when mono">
@@ -21,7 +21,7 @@ import { work, sideProjects, monthYear, duration } from '../data/content';
                             <span class="feature-dur">{duration(w.start, w.end)}</span>
                         </span>
                     </div>
-                    <div class="feature-body">
+                    <div class="feature-body" data-depth="10">
                         <p class="label">{w.org}</p>
                         <h3 class="feature-name">{w.name}</h3>
                         <p class="feature-blurb">{w.blurb}</p>
@@ -45,7 +45,7 @@ import { work, sideProjects, monthYear, duration } from '../data/content';
 
         <div class="side-grid" data-stagger>
             {sideProjects.map((p) => (
-                <a href={p.href} target="_blank" rel="noopener" class="side card" data-spotlight>
+                <a href={p.href} target="_blank" rel="noopener" class="side card" data-spotlight data-tilt>
                     <div class="side-top">
                         <span class="side-name mono">{p.name}</span>
                         <span class="tag">{p.lang}</span>
@@ -88,6 +88,7 @@ import { work, sideProjects, monthYear, duration } from '../data/content';
         padding: 12px 14px;
         border-radius: var(--radius-sm);
         background: #fff;
+        border: 1px solid var(--line);
         flex-shrink: 0;
         transition: border-radius var(--swap);
     }

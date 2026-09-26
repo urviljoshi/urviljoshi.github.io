@@ -68,7 +68,7 @@ const segs = chrono.map((r, i) => {
                     const chronoIndex = roles.length - 1 - idx;
                     const s = segs[chronoIndex];
                     return (
-                        <li class="role card" data-role={chronoIndex} data-from={s.a} data-to={s.b} data-spotlight>
+                        <li class="role card" data-role={chronoIndex} data-from={s.a} data-to={s.b} data-spotlight data-tilt data-tilt-max="4">
                             <div class="role-when">
                                 <span class="mono role-dates">
                                     {monthYear(r.start)} &ndash; {monthYear(r.end)}

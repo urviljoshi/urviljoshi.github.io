@@ -11,9 +11,9 @@ import { awards, certifications, education, monthYear } from '../data/content';
 
         <div class="awards" data-stagger>
             {awards.map((a) => (
-                <figure class="award card" data-spotlight>
+                <figure class="award card" data-spotlight data-tilt>
                     <div class="award-img">
-                        <img src={a.image} alt={a.title} loading="lazy" data-pixelate />
+                        <img src={a.image} alt={a.title} loading="lazy" data-parallax />
                     </div>
                     <figcaption class="award-cap">
                         <span class="label">{a.issuer}</span>
@@ -74,15 +74,18 @@ import { awards, certifications, education, monthYear } from '../data/content';
         border-bottom: 1px solid var(--line);
     }
 
+    /* Oversized so scroll parallax (transform) never shows an edge;
+       hover zoom uses the separate scale property */
     .award-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.8s var(--ease-out);
+        scale: 1.14;
+        transition: scale 0.9s var(--ease-out);
     }
 
     .award:hover .award-img img {
-        transform: scale(1.04);
+        scale: 1.2;
     }
 
     .award-cap {
