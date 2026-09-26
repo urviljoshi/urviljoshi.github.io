@@ -1,0 +1,234 @@
+---
+import { person } from '../data/content';
+
+const links = [
+    { href: '#about', label: 'About' },
+    { href: '#career', label: 'Career' },
+    { href: '#work', label: 'Work' },
+    { href: '#writing', label: 'Writing' },
+    { href: '#videos', label: 'Videos' }
+];
+---
+
+<header class="nav" data-nav>
+    <div class="nav-bar">
+        <a href="#top" class="nav-mark" aria-label="Back to top">
+            <span class="nav-mark-uj">UJ</span>
+        </a>
+
+        <nav aria-label="Sections" class="nav-links">
+            {links.map((l) => (
+                <a href={l.href} class="nav-link" data-nav-link={l.href.slice(1)}>
+                    {l.label}
+                </a>
+            ))}
+        </nav>
+
+        <div class="nav-actions">
+            <a href="#contact" class="nav-cta">Contact</a>
+            <button class="nav-menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>
+                <span class="sr-only">Open menu</span>
+                <span class="nav-menu-bars" aria-hidden="true"><i></i><i></i></span>
+            </button>
+        </div>
+        <span class="nav-progress" data-progress aria-hidden="true"></span>
+    </div>
+</header>
+
+<div class="menu" id="menu" data-menu hidden>
+    <nav class="menu-inner" aria-label="Menu">
+        {[...links, { href: '#contact', label: 'Contact' }].map((l) => (
+            <a href={l.href} class="menu-link" data-menu-link>
+                {l.label}
+            </a>
+        ))}
+        <a href={person.resume} class="menu-resume label" target="_blank" rel="noopener">Resume (PDF)</a>
+    </nav>
+</div>
+
+<style>
+    .nav {
+        position: fixed;
+        top: var(--nav-top);
+        left: 0;
+        right: 0;
+        z-index: 50;
+        padding-inline: var(--gutter);
+        pointer-events: none;
+        transition: transform 0.5s var(--ease-out);
+    }
+
+    .nav.is-hidden {
+        transform: translateY(calc(-100% - var(--nav-top) - 8px));
+    }
+
+    .nav-bar {
+        pointer-events: auto;
+        position: relative;
+        max-width: 880px;
+        margin-inline: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 56px;
+        padding: 0 8px 0 10px;
+        border-radius: var(--radius-pill);
+        border: 1px solid color-mix(in srgb, var(--line-strong) 70%, transparent);
+        background: color-mix(in srgb, var(--bg) 72%, transparent);
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        overflow: hidden;
+        transition:
+            border-radius var(--swap),
+            background-color var(--swap),
+            border-color var(--swap);
+    }
+
+    .nav-mark {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: var(--radius-pill);
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: -0.02em;
+        flex-shrink: 0;
+        transition:
+            background-color var(--swap),
+            border-radius var(--swap);
+    }
+
+    :global([data-variant='pixel']) .nav-mark-uj {
+        font-family: 'Silkscreen', var(--font-mono);
+        font-weight: 400;
+        font-size: 0.8rem;
+        letter-spacing: 0;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2px;
+        margin-inline: auto;
+    }
+
+    .nav-link {
+        position: relative;
+        padding: 8px 14px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        border-radius: var(--radius-pill);
+        transition:
+            color 0.3s,
+            background-color 0.3s;
+    }
+
+    .nav-link:hover,
+    .nav-link.is-active {
+        color: var(--text);
+    }
+
+    .nav-link.is-active {
+        background: var(--surface-2);
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .nav-cta {
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+        padding-inline: 18px;
+        border-radius: var(--radius-pill);
+        background: var(--text);
+        color: var(--bg);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition:
+            background-color 0.3s,
+            border-radius var(--swap);
+    }
+
+    .nav-cta:hover {
+        background: var(--accent);
+    }
+
+    .nav-progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+        background: var(--accent);
+        transform-origin: left;
+        transform: scaleX(0);
+        opacity: 0.8;
+    }
+
+    .nav-menu {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--line-strong);
+        place-items: center;
+    }
+
+    .nav-menu-bars {
+        display: grid;
+        gap: 5px;
+    }
+
+    .nav-menu-bars i {
+        display: block;
+        width: 16px;
+        height: 1.5px;
+        background: currentColor;
+    }
+
+    @media (max-width: 760px) {
+        .nav-links {
+            display: none;
+        }
+        .nav-actions {
+            margin-left: auto;
+        }
+        .nav-menu {
+            display: grid;
+        }
+    }
+
+    .menu {
+        position: fixed;
+        inset: 0;
+        z-index: 49;
+        background: var(--bg);
+        padding: calc(var(--nav-top) + 96px) var(--gutter) calc(env(safe-area-inset-bottom, 0px) + 32px);
+        overflow-y: auto;
+    }
+
+    .menu-inner {
+        display: grid;
+        gap: 4px;
+    }
+
+    .menu-link {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+    }
+
+    .menu-resume {
+        margin-top: 32px;
+        color: var(--accent);
+    }
+</style>

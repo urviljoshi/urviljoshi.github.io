@@ -1,0 +1,224 @@
+---
+import { work, sideProjects, monthYear, duration } from '../data/content';
+---
+
+<section class="section work" id="work" data-section="work">
+    <div class="wrap">
+        <header class="section-head">
+            <p class="label" data-reveal>Work</p>
+            <h2 class="section-title" data-split>Platforms at <em>scale</em>, and things I build for fun.</h2>
+        </header>
+
+        <div class="feature-grid">
+            {work.map((w) => (
+                <a href={w.href} target="_blank" rel="noopener" class="feature card" data-reveal data-spotlight>
+                    <div class="feature-top">
+                        <span class="feature-logo">
+                            <img src={w.logo} alt="" loading="lazy" />
+                        </span>
+                        <span class="feature-when mono">
+                            {monthYear(w.start)} &ndash; {monthYear(w.end)}
+                            <span class="feature-dur">{duration(w.start, w.end)}</span>
+                        </span>
+                    </div>
+                    <div class="feature-body">
+                        <p class="label">{w.org}</p>
+                        <h3 class="feature-name">{w.name}</h3>
+                        <p class="feature-blurb">{w.blurb}</p>
+                    </div>
+                    <div class="feature-foot">
+                        <ul class="feature-tags">
+                            {w.tags.map((t) => (
+                                <li class="tag">{t}</li>
+                            ))}
+                        </ul>
+                        <span class="feature-go" aria-hidden="true">&nearr;</span>
+                    </div>
+                </a>
+            ))}
+        </div>
+
+        <div class="side-head" data-reveal>
+            <h3 class="label">Side projects</h3>
+            <a href="https://github.com/urviljoshi" target="_blank" rel="noopener" class="label link side-all">All repositories</a>
+        </div>
+
+        <div class="side-grid" data-stagger>
+            {sideProjects.map((p) => (
+                <a href={p.href} target="_blank" rel="noopener" class="side card" data-spotlight>
+                    <div class="side-top">
+                        <span class="side-name mono">{p.name}</span>
+                        <span class="tag">{p.lang}</span>
+                    </div>
+                    <p class="side-blurb">{p.blurb}</p>
+                    <span class="side-cta label">View source &rarr;</span>
+                </a>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .feature {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 40px;
+        padding: clamp(24px, 3vw, 40px);
+        min-height: 420px;
+    }
+
+    .feature-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .feature-logo {
+        display: grid;
+        place-items: center;
+        min-width: 72px;
+        height: 72px;
+        padding: 12px 14px;
+        border-radius: var(--radius-sm);
+        background: #fff;
+        flex-shrink: 0;
+        transition: border-radius var(--swap);
+    }
+
+    .feature-logo img {
+        max-width: 120px;
+        max-height: 48px;
+        object-fit: contain;
+    }
+
+    .feature-when {
+        display: grid;
+        text-align: right;
+        font-size: 0.8rem;
+        gap: 2px;
+    }
+
+    .feature-dur {
+        color: var(--muted);
+    }
+
+    .feature-body {
+        display: grid;
+        gap: 12px;
+        align-content: end;
+    }
+
+    .feature-name {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(2rem, 4vw, 3.25rem);
+        letter-spacing: -0.04em;
+        line-height: 1;
+    }
+
+    .feature-blurb {
+        color: var(--muted);
+        max-width: 48ch;
+    }
+
+    .feature-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+    }
+
+    .feature-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+    }
+
+    .feature-go {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--line-strong);
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        transition:
+            background-color 0.35s var(--ease-out),
+            color 0.35s,
+            transform 0.5s var(--ease-out),
+            border-radius var(--swap);
+    }
+
+    .feature:hover .feature-go {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: var(--accent);
+        transform: rotate(45deg);
+    }
+
+    .side-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin: clamp(56px, 8vw, 96px) 0 20px;
+    }
+
+    .side-all {
+        color: var(--text);
+    }
+
+    .side-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .side {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 16px;
+        padding: 24px;
+    }
+
+    .side-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+    }
+
+    .side-name {
+        font-size: 1.05rem;
+        font-weight: 500;
+    }
+
+    .side-blurb {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    .side-cta {
+        color: var(--accent);
+        transition: color var(--swap);
+    }
+
+    @media (max-width: 900px) {
+        .feature-grid,
+        .side-grid {
+            grid-template-columns: 1fr;
+        }
+        .feature {
+            min-height: 0;
+        }
+    }
+</style>

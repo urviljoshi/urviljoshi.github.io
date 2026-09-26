@@ -1,0 +1,194 @@
+---
+import { person, posts, videos, yearsExperience, fmtDate, cleanTitle } from '../data/content';
+
+const latestVideo = videos.find((v) => !v.short) ?? videos[0];
+const latestPost = posts[0];
+---
+
+<section class="hero" id="top" aria-label="Introduction">
+    <canvas class="hero-canvas" data-flux aria-hidden="true"></canvas>
+    <div class="hero-fallback" aria-hidden="true"></div>
+
+    <div class="wrap hero-inner">
+        <p class="hero-status label" data-hero-fade>
+            <span class="live-dot" aria-hidden="true"></span>
+            Open to new opportunities
+        </p>
+
+        <h1 class="hero-name" data-hero-name>
+            <span class="hero-line">Urvil</span>
+            <span class="hero-line">Joshi</span>
+        </h1>
+
+        <div class="hero-foot">
+            <p class="hero-lede" data-hero-fade>
+                Backend engineer, {yearsExperience} years in. Java, Spring Boot and microservices, from national ID
+                infrastructure to connected cars. Now {person.role} at HARMAN, writing and filming about AI coding agents
+                on the side.
+            </p>
+
+            <div class="hero-ctas" data-hero-fade>
+                <a href="#work" class="btn btn-primary" data-magnetic>
+                    See my work <span class="arrow" aria-hidden="true">&rarr;</span>
+                </a>
+                <a href={person.resume} class="btn btn-ghost" target="_blank" rel="noopener" data-magnetic>
+                    Resume
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-latest" data-hero-fade>
+            {latestVideo && (
+                <a href={latestVideo.url} target="_blank" rel="noopener" class="latest">
+                    <span class="label">Latest video</span>
+                    <span class="latest-title">{cleanTitle(latestVideo.title)}</span>
+                    <span class="latest-date mono">{fmtDate(latestVideo.date)}</span>
+                </a>
+            )}
+            {latestPost && (
+                <a href={latestPost.url} target="_blank" rel="noopener" class="latest">
+                    <span class="label">Latest article</span>
+                    <span class="latest-title">{latestPost.title}</span>
+                    <span class="latest-date mono">{fmtDate(latestPost.date)}</span>
+                </a>
+            )}
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero {
+        position: relative;
+        min-height: max(640px, 100svh);
+        display: flex;
+        align-items: flex-end;
+        padding-block: calc(var(--nav-top) + 96px) clamp(28px, 4vw, 48px);
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .hero-canvas,
+    .hero-fallback {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    /* Shown when WebGL is unavailable; the canvas sits above it otherwise */
+    .hero-fallback {
+        z-index: -2;
+        background:
+            radial-gradient(60% 50% at 75% 30%, var(--accent-soft), transparent 70%),
+            radial-gradient(40% 40% at 90% 80%, color-mix(in srgb, var(--live) 8%, transparent), transparent 70%);
+    }
+
+    :global([data-variant='pixel']) .hero-canvas {
+        image-rendering: pixelated;
+    }
+
+    .hero-inner {
+        display: grid;
+        gap: clamp(20px, 3vw, 32px);
+    }
+
+    .hero-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text);
+    }
+
+    .hero-name {
+        font-family: var(--font-display);
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-size: clamp(4.5rem, 15vw, 13rem);
+        line-height: 0.86;
+        letter-spacing: -0.04em;
+        margin-left: -0.04em;
+        display: grid;
+    }
+
+    .hero-line {
+        display: block;
+    }
+
+    .hero-line:nth-child(2) {
+        padding-left: clamp(0px, 9vw, 160px);
+        color: var(--accent);
+        transition: color var(--swap);
+    }
+
+    .hero-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px 48px;
+    }
+
+    .hero-lede {
+        max-width: 46ch;
+        color: var(--muted);
+        font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+        line-height: 1.55;
+    }
+
+    .hero-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .hero-latest {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        margin-top: clamp(16px, 3vw, 40px);
+        border-top: 1px solid var(--line);
+        padding-top: 20px;
+    }
+
+    .latest {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: baseline;
+        gap: 16px;
+        padding-right: 24px;
+        min-width: 0;
+    }
+
+    .latest-title {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: color 0.3s;
+    }
+
+    .latest:hover .latest-title {
+        color: var(--accent);
+    }
+
+    .latest-date {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    @media (max-width: 860px) {
+        .hero-latest {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+        .latest {
+            grid-template-columns: 1fr auto;
+            gap: 4px 12px;
+            padding-right: 0;
+        }
+        .latest .label {
+            grid-column: 1 / -1;
+        }
+    }
+</style>

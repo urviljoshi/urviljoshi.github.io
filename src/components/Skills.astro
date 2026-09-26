@@ -1,0 +1,59 @@
+---
+import { skills } from '../data/content';
+---
+
+<section class="section skills" id="skills" data-section="skills">
+    <div class="wrap">
+        <header class="section-head">
+            <p class="label" data-reveal>Toolkit</p>
+            <h2 class="section-title" data-split>The stack I <em>reach for</em>.</h2>
+        </header>
+
+        <div class="skill-rows">
+            {skills.map((g) => (
+                <div class="skill-row" data-reveal>
+                    <h3 class="label skill-group">{g.group}</h3>
+                    <ul class="skill-chips" data-stagger>
+                        {g.items.map((s) => (
+                            <li class="chip">{s}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .skill-rows {
+        display: grid;
+        border-top: 1px solid var(--line);
+    }
+
+    .skill-row {
+        display: grid;
+        grid-template-columns: minmax(140px, 220px) 1fr;
+        gap: 16px 40px;
+        align-items: center;
+        padding-block: 22px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .skill-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .skill-chips .chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+        .skill-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+    }
+</style>

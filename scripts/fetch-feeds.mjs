@@ -10,12 +10,13 @@
    Usage: node scripts/fetch-feeds.mjs
    ======================================================================== */
 
-import { writeFile, readFile, mkdir } from 'node:fs/promises';
+import { writeFile, readFile, mkdir, readdir, unlink, access } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = resolve(ROOT, 'data/feeds.json');
+const THUMBS = resolve(ROOT, 'public/thumbs');
 
 const MEDIUM_FEED = 'https://medium.com/feed/@urvvil08';
 const YT_CHANNEL_ID = 'UCh89P7Jv512B8YpAELZms2A';
@@ -107,7 +108,8 @@ function parseYouTube(xml) {
                 id,
                 title,
                 url: `https://www.youtube.com/watch?v=${id}`,
-                thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+                thumbnail: `/thumbs/${id}.jpg`,
+                remoteThumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
                 date: Number.isNaN(iso.valueOf()) ? null : iso.toISOString(),
                 views: Number.isFinite(views) ? views : 0,
                 short: /#shorts?\b/i.test(title)
@@ -126,6 +128,35 @@ async function previous() {
         return JSON.parse(await readFile(OUT, 'utf8'));
     } catch {
         return { posts: [], videos: [] };
+    }
+}
+
+/**
+ * Mirror each video thumbnail into public/thumbs so the site never
+ * hotlinks YouTube: faster first paint, no third-party request, and
+ * canvas effects can read the pixels.
+ */
+async function syncThumbnails(videos) {
+    await mkdir(THUMBS, { recursive: true });
+    const keep = new Set(videos.map((v) => `${v.id}.jpg`));
+
+    for (const v of videos) {
+        const file = resolve(THUMBS, `${v.id}.jpg`);
+        try {
+            await access(file);
+            continue; // already mirrored; thumbnails for a given id rarely change
+        } catch {}
+        try {
+            const res = await fetch(v.remoteThumbnail, { headers: { 'User-Agent': UA } });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            await writeFile(file, Buffer.from(await res.arrayBuffer()));
+        } catch (err) {
+            console.error(`thumb ${v.id}: ${err.message}`);
+        }
+    }
+
+    for (const name of await readdir(THUMBS)) {
+        if (name.endsWith('.jpg') && !keep.has(name)) await unlink(resolve(THUMBS, name));
     }
 }
 
@@ -162,6 +193,8 @@ async function main() {
     if (failed === 2 && !data.posts.length && !data.videos.length) {
         throw new Error('both feeds failed and no cached data exists');
     }
+
+    await syncThumbnails(data.videos.filter((v) => v.remoteThumbnail));
 
     await mkdir(dirname(OUT), { recursive: true });
     await writeFile(OUT, JSON.stringify(data, null, 2) + '\n', 'utf8');

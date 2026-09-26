@@ -1,0 +1,125 @@
+---
+import { posts, fmtDate } from '../data/content';
+
+const shown = posts.slice(0, 7);
+---
+
+<section class="section writing" id="writing" data-section="writing">
+    <div class="wrap">
+        <header class="section-head writing-head">
+            <p class="label" data-reveal>Writing</p>
+            <h2 class="section-title" data-split>Notes from the <em>deep end</em>.</h2>
+            <p class="lede" data-reveal>Java internals, concurrency and, lately, how AI coding agents hold up in real work. Published on Medium.</p>
+        </header>
+
+        <ol class="posts">
+            {shown.map((p) => (
+                <li data-reveal>
+                    <a href={p.url} target="_blank" rel="noopener" class="post">
+                        <span class="post-date mono">{fmtDate(p.date)}</span>
+                        <span class="post-title">{p.title}</span>
+                        <span class="post-tags">
+                            {p.tags.slice(0, 2).map((t) => (
+                                <span class="tag">{t}</span>
+                            ))}
+                        </span>
+                        <span class="post-go" aria-hidden="true">&rarr;</span>
+                    </a>
+                </li>
+            ))}
+        </ol>
+
+        <a href="https://medium.com/@urvvil08" target="_blank" rel="noopener" class="btn btn-ghost more" data-reveal data-magnetic>
+            All articles on Medium <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+    </div>
+</section>
+
+<style>
+    .posts {
+        border-top: 1px solid var(--line);
+    }
+
+    .post {
+        position: relative;
+        display: grid;
+        grid-template-columns: 110px minmax(0, 1fr) auto 32px;
+        gap: 24px;
+        align-items: center;
+        padding: 26px 0;
+        border-bottom: 1px solid var(--line);
+        isolation: isolate;
+    }
+
+    .post::before {
+        content: '';
+        position: absolute;
+        inset: 0 calc(var(--gutter) * -0.5);
+        z-index: -1;
+        background: var(--surface);
+        border-radius: var(--radius-sm);
+        transform: scaleY(0.4);
+        opacity: 0;
+        transition:
+            transform 0.45s var(--ease-out),
+            opacity 0.3s;
+    }
+
+    .post:hover::before {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+
+    .post-date {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    .post-title {
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(1.15rem, 2vw, 1.5rem);
+        letter-spacing: -0.02em;
+        line-height: 1.25;
+        text-wrap: balance;
+        transition:
+            color 0.3s,
+            transform 0.45s var(--ease-out);
+    }
+
+    .post:hover .post-title {
+        color: var(--accent);
+        transform: translateX(8px);
+    }
+
+    .post-tags {
+        display: flex;
+        gap: 14px;
+    }
+
+    .post-go {
+        justify-self: end;
+        transition: transform 0.45s var(--ease-out);
+    }
+
+    .post:hover .post-go {
+        transform: translateX(6px);
+    }
+
+    .more {
+        margin-top: 40px;
+    }
+
+    @media (max-width: 860px) {
+        .post {
+            grid-template-columns: 1fr 24px;
+            gap: 8px 16px;
+        }
+        .post-date {
+            grid-column: 1 / -1;
+        }
+        .post-tags {
+            display: none;
+        }
+    }
+</style>

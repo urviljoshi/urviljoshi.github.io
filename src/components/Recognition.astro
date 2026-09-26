@@ -1,0 +1,159 @@
+---
+import { awards, certifications, education, monthYear } from '../data/content';
+---
+
+<section class="section recognition" id="recognition" data-section="recognition">
+    <div class="wrap">
+        <header class="section-head">
+            <p class="label" data-reveal>Recognition</p>
+            <h2 class="section-title" data-split>Awards and <em>always learning</em>.</h2>
+        </header>
+
+        <div class="awards" data-stagger>
+            {awards.map((a) => (
+                <figure class="award card" data-spotlight>
+                    <div class="award-img">
+                        <img src={a.image} alt={a.title} loading="lazy" data-pixelate />
+                    </div>
+                    <figcaption class="award-cap">
+                        <span class="label">{a.issuer}</span>
+                        <span class="award-title">{a.title}</span>
+                        {a.note && <span class="award-note">{a.note}</span>}
+                    </figcaption>
+                </figure>
+            ))}
+        </div>
+
+        <div class="learning">
+            <div class="learning-col" data-reveal>
+                <h3 class="label">Certifications</h3>
+                <ul class="cert-list">
+                    {certifications.map((c) => (
+                        <li>
+                            <a href={c.href} target="_blank" rel="noopener" class="cert">
+                                <span class="cert-title">{c.title}</span>
+                                <span class="cert-meta mono">
+                                    {c.issuer} &middot; {monthYear(c.date)}
+                                </span>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div class="learning-col" data-reveal>
+                <h3 class="label">Education</h3>
+                <div class="edu">
+                    <span class="cert-title">{education.degree}</span>
+                    <span class="cert-meta mono">
+                        {education.school} &middot; {education.years}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .awards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .award {
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+
+    .award-img {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        max-width: 100%;
+        overflow: hidden;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--line);
+    }
+
+    .award-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s var(--ease-out);
+    }
+
+    .award:hover .award-img img {
+        transform: scale(1.04);
+    }
+
+    .award-cap {
+        display: grid;
+        gap: 6px;
+        align-content: start;
+        padding: 22px 24px 26px;
+    }
+
+    .award-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: 1.3rem;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+
+    .award-note {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .learning {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-top: clamp(56px, 8vw, 96px);
+    }
+
+    .learning-col {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+    }
+
+    .cert-list {
+        border-top: 1px solid var(--line);
+    }
+
+    .cert,
+    .edu {
+        display: grid;
+        gap: 4px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .edu {
+        border-top: 1px solid var(--line);
+    }
+
+    .cert-title {
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .cert:hover .cert-title {
+        color: var(--accent);
+    }
+
+    .cert-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+        .awards {
+            grid-template-columns: 1fr;
+        }
+        .learning {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

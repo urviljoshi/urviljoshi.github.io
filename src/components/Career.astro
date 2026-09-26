@@ -1,0 +1,312 @@
+---
+import { roles, monthYear, duration, yearPos, yearsExperience } from '../data/content';
+
+const WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+const yearsWord = WORDS[yearsExperience] ?? String(yearsExperience);
+
+// Axis runs from the first role's year to "now".
+const chrono = [...roles].reverse();
+const axisMin = Math.floor(yearPos(chrono[0].start));
+const axisMax = yearPos(null);
+const pct = (y: number) => ((y - axisMin) / (axisMax - axisMin)) * 100;
+
+const ticks: number[] = [];
+for (let y = axisMin; y <= Math.floor(axisMax); y++) ticks.push(y);
+
+const segs = chrono.map((r, i) => {
+    const a = yearPos(r.start);
+    const b = r.end ? yearPos(r.end) + 1 / 12 : axisMax;
+    return { i, left: pct(a), width: Math.max(pct(b) - pct(a), 0.8), a, b, ongoing: !r.end };
+});
+---
+
+<section class="section career" id="career" data-section="career">
+    <div class="career-stage" data-career data-axis-min={axisMin} data-axis-max={axisMax}>
+        <div class="wrap">
+            <header class="section-head">
+                <p class="label" data-reveal>Career</p>
+                <h2 class="section-title" data-split>{yearsWord} years, <em>two platforms</em> people rely on.</h2>
+            </header>
+
+            <div class="axis" data-reveal aria-hidden="true">
+                <div class="axis-track">
+                    <span class="axis-line"></span>
+                    <span class="axis-fill" data-axis-fill></span>
+
+                    {segs.map((s) => (
+                        <span
+                            class:list={['seg', { ongoing: s.ongoing }]}
+                            style={`left:${s.left}%;width:${s.width}%`}
+                            data-seg={s.i}
+                        ></span>
+                    ))}
+
+                    {segs.map((s) => (
+                        <span class="marble" style={`left:${s.left}%`} data-marble={s.i}></span>
+                    ))}
+
+                    <span class="axis-now" style="left:100%">
+                        <span class="live-dot"></span>
+                    </span>
+
+                    <span class="playhead" data-playhead>
+                        <span class="playhead-year mono" data-year>{axisMin}</span>
+                    </span>
+                </div>
+
+                <div class="ticks">
+                    {ticks.map((y) => (
+                        <span class="tick mono" style={`left:${pct(y)}%`}>
+                            {y}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            <ol class="roles" data-roles>
+                {roles.map((r, idx) => {
+                    const chronoIndex = roles.length - 1 - idx;
+                    const s = segs[chronoIndex];
+                    return (
+                        <li class="role card" data-role={chronoIndex} data-from={s.a} data-to={s.b} data-spotlight>
+                            <div class="role-when">
+                                <span class="mono role-dates">
+                                    {monthYear(r.start)} &ndash; {monthYear(r.end)}
+                                </span>
+                                <span class="mono role-dur">{duration(r.start, r.end)}</span>
+                            </div>
+                            <div class="role-main">
+                                <h3 class="role-title">{r.title}</h3>
+                                <p class="role-org">
+                                    {r.org}
+                                    {r.place && <span class="role-place"> &middot; {r.place}</span>}
+                                </p>
+                                <p class="role-summary">{r.summary}</p>
+                            </div>
+                            {r.project && <span class="role-project label">{r.project}</span>}
+                        </li>
+                    );
+                })}
+            </ol>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* ---------- axis ---------- */
+    .axis {
+        margin-bottom: clamp(32px, 5vw, 56px);
+    }
+
+    .axis-track {
+        position: relative;
+        height: 36px;
+    }
+
+    .axis-line,
+    .axis-fill {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        background: var(--line-strong);
+    }
+
+    .axis-fill {
+        right: auto;
+        width: 100%;
+        background: var(--accent);
+        transform-origin: left;
+        transform: scaleX(1);
+        opacity: 0.6;
+    }
+
+    .seg {
+        position: absolute;
+        top: calc(50% - 3px);
+        height: 6px;
+        border-radius: var(--radius-pill);
+        background: color-mix(in srgb, var(--accent) 35%, var(--surface-2));
+        transition:
+            background-color 0.4s,
+            border-radius var(--swap);
+    }
+
+    .seg.ongoing {
+        background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 35%, var(--surface-2)), var(--live));
+    }
+
+    .seg.is-active {
+        background: var(--accent);
+    }
+
+    .marble {
+        position: absolute;
+        top: 50%;
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border-radius: var(--marble);
+        background: var(--bg);
+        border: 2px solid var(--accent);
+        transition:
+            transform 0.4s var(--ease-out),
+            background-color 0.4s,
+            border-radius var(--swap);
+    }
+
+    .marble.is-active {
+        background: var(--accent);
+        transform: scale(1.35);
+    }
+
+    .axis-now {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .playhead {
+        position: absolute;
+        top: -6px;
+        bottom: -6px;
+        left: 0;
+        width: 1px;
+        background: var(--text);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .playhead-year {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: var(--radius-pill);
+        background: var(--text);
+        color: var(--bg);
+        white-space: nowrap;
+    }
+
+    .ticks {
+        position: relative;
+        height: 20px;
+        margin-top: 8px;
+    }
+
+    .tick {
+        position: absolute;
+        transform: translateX(-50%);
+        font-size: 0.72rem;
+        color: var(--muted);
+    }
+
+    /* ---------- role cards: list by default ---------- */
+    .roles {
+        display: grid;
+        gap: 12px;
+    }
+
+    .role {
+        display: grid;
+        grid-template-columns: minmax(180px, 240px) 1fr auto;
+        gap: 12px 40px;
+        padding: clamp(22px, 3vw, 36px);
+        align-items: start;
+    }
+
+    .role-when {
+        display: grid;
+        gap: 4px;
+    }
+
+    .role-dates {
+        font-size: 0.85rem;
+    }
+
+    .role-dur {
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
+
+    .role-main {
+        display: grid;
+        gap: 6px;
+        max-width: 60ch;
+    }
+
+    .role-title {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.4rem, 2.4vw, 2rem);
+        letter-spacing: -0.025em;
+        line-height: 1.15;
+    }
+
+    .role-org {
+        color: var(--accent);
+        transition: color var(--swap);
+    }
+
+    .role-place {
+        color: var(--muted);
+    }
+
+    .role-summary {
+        color: var(--muted);
+        margin-top: 8px;
+    }
+
+    .role-project {
+        padding: 6px 12px;
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+        transition: border-radius var(--swap);
+    }
+
+    /* ---------- scrub mode (desktop, motion allowed) ---------- */
+    .career.is-scrub .career-stage {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        padding-block: 96px 48px;
+    }
+
+    .career.is-scrub .career-stage > .wrap {
+        width: 100%;
+    }
+
+    .career.is-scrub .roles {
+        grid-template-areas: 'stack';
+    }
+
+    .career.is-scrub .role {
+        grid-area: stack;
+        min-height: 220px;
+    }
+
+    .career.is-scrub .playhead {
+        opacity: 1;
+    }
+
+    .career.is-scrub .axis-fill {
+        transform: scaleX(0);
+    }
+
+    @media (max-width: 760px) {
+        .role {
+            grid-template-columns: 1fr;
+        }
+        .role-project {
+            justify-self: start;
+            grid-row: 1;
+        }
+        .tick:nth-child(even) {
+            display: none;
+        }
+    }
+</style>

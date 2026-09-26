@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-19T07:20:05.904Z",
+  "generated": "2026-09-26T12:52:23.599Z",
   "channel": {
     "name": "FluxStack",
     "url": "https://www.youtube.com/@fluxstack"
@@ -111,7 +111,8 @@
       "id": "nRSikmfa8-M",
       "title": "Claude Opus 5 Made Me Perlin Noise Flow Field #claudeopus5 #claudeai #shorts",
       "url": "https://www.youtube.com/watch?v=nRSikmfa8-M",
-      "thumbnail": "https://i.ytimg.com/vi/nRSikmfa8-M/hqdefault.jpg",
+      "thumbnail": "/thumbs/nRSikmfa8-M.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/nRSikmfa8-M/hqdefault.jpg",
       "date": "2026-07-25T23:30:18.000Z",
       "views": 249,
       "short": true
@@ -120,7 +121,8 @@
       "id": "Ar6jPiyQPF8",
       "title": "I Made 3 AIs Rebuild My Coffee Timer ☕ You Pick the Winner (1, 2 or 3?) #claude #chatgpt #ai",
       "url": "https://www.youtube.com/watch?v=Ar6jPiyQPF8",
-      "thumbnail": "https://i.ytimg.com/vi/Ar6jPiyQPF8/hqdefault.jpg",
+      "thumbnail": "/thumbs/Ar6jPiyQPF8.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/Ar6jPiyQPF8/hqdefault.jpg",
       "date": "2026-07-05T00:16:21.000Z",
       "views": 146,
       "short": false
@@ -129,7 +131,8 @@
       "id": "3DFJEGCKcJA",
       "title": "The Creator of Claude Code Doesn't Prompt Anymore #claudecode #promptengineering #aiagents",
       "url": "https://www.youtube.com/watch?v=3DFJEGCKcJA",
-      "thumbnail": "https://i.ytimg.com/vi/3DFJEGCKcJA/hqdefault.jpg",
+      "thumbnail": "/thumbs/3DFJEGCKcJA.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/3DFJEGCKcJA/hqdefault.jpg",
       "date": "2026-06-28T23:08:25.000Z",
       "views": 614,
       "short": false
@@ -138,34 +141,38 @@
       "id": "LW40ODqdEhA",
       "title": "I made Claude interrogate ME before it wrote any code 🔥 #shorts",
       "url": "https://www.youtube.com/watch?v=LW40ODqdEhA",
-      "thumbnail": "https://i.ytimg.com/vi/LW40ODqdEhA/hqdefault.jpg",
+      "thumbnail": "/thumbs/LW40ODqdEhA.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/LW40ODqdEhA/hqdefault.jpg",
       "date": "2026-06-28T02:06:00.000Z",
-      "views": 941,
+      "views": 942,
       "short": true
     },
     {
       "id": "W5VsRnvD0pQ",
       "title": "Claude Code Getting Dumber? Fix It (10 Features) #shorts",
       "url": "https://www.youtube.com/watch?v=W5VsRnvD0pQ",
-      "thumbnail": "https://i.ytimg.com/vi/W5VsRnvD0pQ/hqdefault.jpg",
+      "thumbnail": "/thumbs/W5VsRnvD0pQ.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/W5VsRnvD0pQ/hqdefault.jpg",
       "date": "2026-06-24T19:30:19.000Z",
-      "views": 834,
+      "views": 836,
       "short": true
     },
     {
       "id": "NLyEoDtbmdw",
       "title": "10 Claude Code Features Most Devs Don't Use (But Should)",
       "url": "https://www.youtube.com/watch?v=NLyEoDtbmdw",
-      "thumbnail": "https://i.ytimg.com/vi/NLyEoDtbmdw/hqdefault.jpg",
+      "thumbnail": "/thumbs/NLyEoDtbmdw.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/NLyEoDtbmdw/hqdefault.jpg",
       "date": "2026-06-22T06:35:26.000Z",
-      "views": 125,
+      "views": 126,
       "short": false
     },
     {
       "id": "wpSsVULBIxI",
       "title": "I Asked the New Claude Fable 5 to Code a Satisfying Simulation 🤯#shorts #fable5 #anthropic",
       "url": "https://www.youtube.com/watch?v=wpSsVULBIxI",
-      "thumbnail": "https://i.ytimg.com/vi/wpSsVULBIxI/hqdefault.jpg",
+      "thumbnail": "/thumbs/wpSsVULBIxI.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/wpSsVULBIxI/hqdefault.jpg",
       "date": "2026-06-10T00:42:37.000Z",
       "views": 1025,
       "short": true
@@ -174,16 +181,18 @@
       "id": "NF4pLEVLHRQ",
       "title": "Claude Code Dynamic Workflows: Create An Army Of Agents #shorts #claudecode #aicoding",
       "url": "https://www.youtube.com/watch?v=NF4pLEVLHRQ",
-      "thumbnail": "https://i.ytimg.com/vi/NF4pLEVLHRQ/hqdefault.jpg",
+      "thumbnail": "/thumbs/NF4pLEVLHRQ.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/NF4pLEVLHRQ/hqdefault.jpg",
       "date": "2026-06-07T23:12:41.000Z",
-      "views": 743,
+      "views": 745,
       "short": true
     },
     {
       "id": "BLdpDLoKys0",
       "title": "Your Claude Code terminal is BORING (30s fix) #shorts #claudecode",
       "url": "https://www.youtube.com/watch?v=BLdpDLoKys0",
-      "thumbnail": "https://i.ytimg.com/vi/BLdpDLoKys0/hqdefault.jpg",
+      "thumbnail": "/thumbs/BLdpDLoKys0.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/BLdpDLoKys0/hqdefault.jpg",
       "date": "2026-06-06T02:19:15.000Z",
       "views": 498,
       "short": true
@@ -192,16 +201,18 @@
       "id": "kCjJH4nzkFE",
       "title": "Stop guessing which AI your laptop can run 🤯#shorts #localllm #ollama",
       "url": "https://www.youtube.com/watch?v=kCjJH4nzkFE",
-      "thumbnail": "https://i.ytimg.com/vi/kCjJH4nzkFE/hqdefault.jpg",
+      "thumbnail": "/thumbs/kCjJH4nzkFE.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/kCjJH4nzkFE/hqdefault.jpg",
       "date": "2026-06-01T01:44:58.000Z",
-      "views": 235,
+      "views": 234,
       "short": true
     },
     {
       "id": "FpIYc5o-bx4",
       "title": "Two HTTP requests just broke my refund endpoint #shorts #claudecode #specdrivendevelopment",
       "url": "https://www.youtube.com/watch?v=FpIYc5o-bx4",
-      "thumbnail": "https://i.ytimg.com/vi/FpIYc5o-bx4/hqdefault.jpg",
+      "thumbnail": "/thumbs/FpIYc5o-bx4.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/FpIYc5o-bx4/hqdefault.jpg",
       "date": "2026-05-28T23:40:41.000Z",
       "views": 1280,
       "short": true
@@ -210,9 +221,10 @@
       "id": "eqWGzIHNjyw",
       "title": "I Built a AI Dev Workflow using Spec Driven Development #specdrivendevelopment #claudecode",
       "url": "https://www.youtube.com/watch?v=eqWGzIHNjyw",
-      "thumbnail": "https://i.ytimg.com/vi/eqWGzIHNjyw/hqdefault.jpg",
+      "thumbnail": "/thumbs/eqWGzIHNjyw.jpg",
+      "remoteThumbnail": "https://i.ytimg.com/vi/eqWGzIHNjyw/hqdefault.jpg",
       "date": "2026-05-26T02:30:19.000Z",
-      "views": 374,
+      "views": 375,
       "short": false
     }
   ]
