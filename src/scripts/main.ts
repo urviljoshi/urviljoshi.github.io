@@ -10,6 +10,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
 import { initFlux, type Flux } from './flux';
+import { initScene } from './scene';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -43,6 +44,20 @@ document.addEventListener('click', (e) => {
 });
 
 /* ---------------- hero ---------------- */
+
+const sceneRoot = $('[data-scene]');
+function scene() {
+    if (!sceneRoot) return;
+    initScene(sceneRoot, { reduced, finePointer });
+    if (reduced) return;
+    // The scene settles in after the name, then drifts slower than the page
+    gsap.from('[data-hero-scene]', { opacity: 0, '--ry': '40px', scale: 0.96, duration: 1.4, ease: 'expo.out', delay: 0.5 });
+    gsap.to('[data-hero-scene]', {
+        yPercent: 10,
+        ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+}
 
 let flux: Flux | null = null;
 const canvas = $<HTMLCanvasElement>('[data-flux]');
@@ -407,13 +422,18 @@ function themeToggle() {
     const label = () => btn.setAttribute('aria-label', `Switch to ${effectiveTheme() === 'dark' ? 'light' : 'dark'} theme`);
     label();
 
-    // Following the OS: keep the field in sync if it changes underneath us
+    // Keep the WebGL field in sync however the theme changes: the OS
+    // setting, this button, or a host page stamping data-theme on <html>
     systemDark.addEventListener('change', () => {
         if (!root.dataset.theme) {
             flux?.retheme();
             label();
         }
     });
+    new MutationObserver(() => {
+        flux?.retheme();
+        label();
+    }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
     btn.addEventListener('click', (e) => {
         const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
@@ -532,6 +552,7 @@ async function boot() {
 
     themeToggle();
     heroIntro();
+    scene();
     careerScrub();
     reveals();
     navBehaviour();

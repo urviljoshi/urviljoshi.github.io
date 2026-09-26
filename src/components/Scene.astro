@@ -1,0 +1,579 @@
+---
+/* ========================================================================
+   Desk scene — Urvil at work, seen from behind.
+   Hand-built SVG so every part can move on its own and follow the theme:
+   daytime room in light mode; lamp, string lights and screen glow at night.
+   Layers (back to front) carry data-layer for cursor parallax:
+     wall  -> art, poster, notes, string lights
+     desk  -> monitor, desk, lamp, mug, plant, tower
+     char  -> the person and the chair
+   The monitor's code is typed live by src/scripts/scene.ts.
+   ======================================================================== */
+
+// String lights hang in a shallow curve across the top of the wall
+const bulbs = Array.from({ length: 11 }, (_, i) => {
+    const t = 0.04 + i * 0.092;
+    const x = (1 - t) ** 2 * 18 + 2 * (1 - t) * t * 320 + t ** 2 * 622;
+    const y = (1 - t) ** 2 * 14 + 2 * (1 - t) * t * 64 + t ** 2 * 14;
+    return { x, y, c: ['var(--sc-b1)', 'var(--sc-b2)', 'var(--sc-b3)', 'var(--sc-b4)'][i % 4], d: (i * 0.37) % 2.2 };
+});
+
+const notes = [
+    { x: 516, y: 218, r: -8, c: '#ffe27a', text: 'ship it' },
+    { x: 556, y: 208, r: 6, c: '#a9c1ff', text: '' },
+    { x: 590, y: 232, r: -4, c: '#ff9fb2', text: 'p99 < 200ms' },
+    { x: 540, y: 250, r: 5, c: '#9fe8c8', text: '' }
+];
+---
+
+<div class="scene" data-scene>
+    <svg
+        class="scene-svg"
+        viewBox="0 0 640 560"
+        role="img"
+        aria-label="Illustration of Urvil at his desk, seen from behind, writing Java code on a monitor"
+    >
+        <defs>
+            <radialGradient id="sc-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.9" />
+                <stop offset="55%" stop-color="var(--accent)" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="sc-cone" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffd98a" stop-opacity="0.55" />
+                <stop offset="100%" stop-color="#ffd98a" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="sc-rgb" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#93a9ff" />
+                <stop offset="50%" stop-color="#5be3b0" />
+                <stop offset="100%" stop-color="#ff9fb2" />
+            </linearGradient>
+            <clipPath id="sc-screen-clip">
+                <rect x="162" y="177" width="316" height="200" rx="5" />
+            </clipPath>
+        </defs>
+
+        <!-- ================= WALL ================= -->
+        <g data-layer="wall" data-depth="8">
+            <!-- string lights -->
+            <path d="M18,14 Q320,64 622,14" fill="none" stroke="var(--sc-wire)" stroke-width="1.5" />
+            {bulbs.map((b) => (
+                <g class="bulb" style={`--d:${b.d}s`}>
+                    <line x1={b.x} y1={b.y} x2={b.x} y2={b.y + 5} stroke="var(--sc-wire)" stroke-width="1.5" />
+                    <circle class="bulb-halo" cx={b.x} cy={b.y + 10} r="9" fill={b.c} />
+                    <circle cx={b.x} cy={b.y + 10} r="4" fill={b.c} />
+                </g>
+            ))}
+
+            <!-- framed abstract, left -->
+            <g transform="translate(38 74) rotate(-4)"><g class="sway" style="--d:0s">
+                <rect width="118" height="148" rx="3" fill="var(--sc-paper)" stroke="var(--sc-frame)" stroke-width="6" />
+                <circle cx="48" cy="58" r="30" fill="var(--accent)" opacity="0.9" />
+                <circle cx="74" cy="86" r="24" fill="#ffb454" opacity="0.85" />
+                <rect x="20" y="104" width="46" height="26" rx="2" fill="var(--live)" opacity="0.8" />
+            </g></g>
+
+            <!-- small square stripes -->
+            <g transform="translate(180 40) rotate(3)"><g class="sway" style="--d:1.2s">
+                <rect width="74" height="74" rx="2" fill="var(--sc-paper)" stroke="var(--sc-frame)" stroke-width="5" />
+                <g stroke-width="7" stroke-linecap="round">
+                    <line x1="14" y1="58" x2="36" y2="14" stroke="#ff9fb2" />
+                    <line x1="30" y1="60" x2="52" y2="16" stroke="var(--accent)" />
+                    <line x1="46" y1="60" x2="62" y2="26" stroke="#ffb454" />
+                </g>
+            </g></g>
+
+            <!-- landscape print -->
+            <g transform="translate(30 250) rotate(2)"><g class="sway" style="--d:0.6s">
+                <rect width="88" height="64" rx="2" fill="var(--sc-sky)" stroke="var(--sc-frame)" stroke-width="5" />
+                <circle cx="64" cy="20" r="8" fill="#ffb454" />
+                <polygon points="4,60 30,26 48,46 60,34 84,60" fill="var(--sc-hill)" />
+            </g></g>
+
+            <!-- FluxStack poster with tape -->
+            <g transform="translate(478 48) rotate(4)"><g class="sway" style="--d:1.8s">
+                <rect width="112" height="150" rx="2" fill="var(--accent)" />
+                <text x="12" y="60" class="poster-big">flux</text>
+                <text x="12" y="96" class="poster-big poster-out">stack</text>
+                <text x="12" y="134" class="poster-small">/ youtube</text>
+                <rect x="-8" y="-6" width="30" height="12" fill="var(--sc-tape)" transform="rotate(-18)" />
+                <rect x="92" y="-2" width="30" height="12" fill="var(--sc-tape)" transform="rotate(16 106 4)" />
+            </g></g>
+
+            <!-- sticky notes -->
+            {notes.map((n, i) => (
+                <g transform={`translate(${n.x} ${n.y}) rotate(${n.r})`}><g class="note" style={`--d:${i * 0.45}s`}>
+                    <rect x="-17" y="-17" width="34" height="34" rx="1.5" fill={n.c} />
+                    {n.text ? (
+                        <text x="0" y="3" class="note-text" text-anchor="middle">{n.text}</text>
+                    ) : (
+                        <g stroke="rgba(0,0,0,0.28)" stroke-width="1.6" stroke-linecap="round">
+                            <line x1="-10" y1="-6" x2="9" y2="-6" />
+                            <line x1="-10" y1="0" x2="6" y2="0" />
+                            <line x1="-10" y1="6" x2="8" y2="6" />
+                        </g>
+                    )}
+                </g></g>
+            ))}
+        </g>
+
+        <!-- ================= DESK ================= -->
+        <g data-layer="desk" data-depth="14">
+            <!-- screen glow on the wall -->
+            <ellipse class="glow" cx="320" cy="285" rx="270" ry="180" fill="url(#sc-glow)" />
+
+            <!-- monitor -->
+            <rect x="310" y="398" width="20" height="44" rx="3" fill="var(--sc-metal)" />
+            <ellipse cx="320" cy="442" rx="58" ry="6" fill="var(--sc-metal)" />
+            <rect x="150" y="165" width="340" height="235" rx="12" fill="var(--sc-monitor)" />
+            <rect x="162" y="177" width="316" height="200" rx="5" fill="#0e1522" />
+
+            <g clip-path="url(#sc-screen-clip)" class="screen">
+                <!-- editor chrome -->
+                <rect x="162" y="177" width="316" height="17" fill="#151d2b" />
+                <rect x="168" y="180" width="94" height="14" rx="3" fill="#0e1522" />
+                <circle cx="175" cy="187" r="2.5" fill="#ffb454" />
+                <text x="182" y="190" class="tab" data-tab>TelemetryController.java</text>
+                <g data-gutter class="gutter"></g>
+                <g data-code class="code"></g>
+                <rect data-caret class="caret" x="192" y="201" width="5" height="10" fill="#93a9ff" />
+                <!-- status bar -->
+                <rect x="162" y="368" width="316" height="9" fill="#1f2a44" />
+                <text x="168" y="375" class="status">main</text>
+                <text x="472" y="375" class="status" text-anchor="end" data-status>Java · UTF-8</text>
+            </g>
+
+            <!-- desk -->
+            <rect x="10" y="440" width="620" height="12" rx="3" fill="var(--sc-desk-top)" />
+            <rect x="20" y="452" width="600" height="140" fill="var(--sc-desk)" />
+
+            <!-- lamp -->
+            <g class="lamp">
+                <polygon class="lamp-cone" points="118,338 154,326 214,440 52,440" fill="url(#sc-cone)" />
+                <ellipse cx="72" cy="440" rx="22" ry="5" fill="var(--sc-metal)" />
+                <path d="M72,440 L92,364 L128,326" fill="none" stroke="var(--sc-metal)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="92" cy="364" r="4.5" fill="var(--sc-metal)" />
+                <path d="M110,316 L150,302 L158,328 L120,342 Z" fill="var(--accent)" />
+                <circle class="lamp-bulb" cx="140" cy="334" r="6" fill="#ffe6ad" />
+            </g>
+
+            <!-- mug with steam -->
+            <g class="mug">
+                <path class="steam" d="M126,404 q-6,-10 0,-20 q6,-10 0,-20" fill="none" stroke="var(--sc-steam)" stroke-width="2.4" stroke-linecap="round" />
+                <path class="steam s2" d="M136,404 q-6,-10 0,-20 q6,-10 0,-20" fill="none" stroke="var(--sc-steam)" stroke-width="2.4" stroke-linecap="round" />
+                <rect x="116" y="410" width="30" height="30" rx="5" fill="var(--sc-mug)" />
+                <path d="M146,418 q12,0 12,9 q0,9 -12,9" fill="none" stroke="var(--sc-mug)" stroke-width="4" />
+                <rect x="121" y="418" width="20" height="3" rx="1.5" fill="var(--accent)" opacity="0.8" />
+            </g>
+
+            <!-- plant -->
+            <g class="plant">
+                <g class="leaves">
+                    <ellipse cx="444" cy="388" rx="7" ry="20" fill="var(--sc-leaf)" transform="rotate(-28 444 404)" />
+                    <ellipse cx="458" cy="382" rx="7" ry="22" fill="var(--sc-leaf-2)" transform="rotate(4 458 402)" />
+                    <ellipse cx="472" cy="390" rx="7" ry="18" fill="var(--sc-leaf)" transform="rotate(30 472 404)" />
+                </g>
+                <path d="M440,404 L476,404 L471,440 L445,440 Z" fill="#c97a55" />
+            </g>
+
+            <!-- tower -->
+            <g class="tower">
+                <rect x="506" y="290" width="96" height="150" rx="7" fill="var(--sc-case)" />
+                <rect x="516" y="302" width="64" height="126" rx="4" fill="#0b1018" />
+                {[338, 392].map((cy) => (
+                    <g>
+                        <circle cx="548" cy={cy} r="21" fill="none" stroke="#2a3546" stroke-width="3" />
+                        <g class="fan">
+                            {[0, 90, 180, 270].map((a) => (
+                                <ellipse cx="548" cy={cy - 9} rx="5" ry="10" fill="var(--accent)" opacity="0.7" transform={`rotate(${a} 548 ${cy})`} />
+                            ))}
+                            <circle cx="548" cy={cy} r="4" fill="#2a3546" />
+                        </g>
+                    </g>
+                ))}
+                <rect class="rgb" x="588" y="302" width="5" height="126" rx="2.5" fill="url(#sc-rgb)" />
+                <circle class="power" cx="590" cy="296" r="2" fill="var(--live)" />
+            </g>
+        </g>
+
+        <!-- ================= CHARACTER ================= -->
+        <g data-layer="char" data-depth="22">
+            <g class="person" data-person>
+                <!-- arms: upper arms beside the chair, forearms reaching for the keyboard -->
+                <g class="arm arm-l">
+                    <path d="M238,420 Q206,452 214,492" fill="none" stroke="var(--sc-hoodie)" stroke-width="30" stroke-linecap="round" />
+                    <path d="M214,492 L258,452" fill="none" stroke="var(--sc-hoodie)" stroke-width="24" stroke-linecap="round" />
+                </g>
+                <g class="arm arm-r">
+                    <path d="M402,420 Q434,452 426,492" fill="none" stroke="var(--sc-hoodie)" stroke-width="30" stroke-linecap="round" />
+                    <path d="M426,492 L382,452" fill="none" stroke="var(--sc-hoodie)" stroke-width="24" stroke-linecap="round" />
+                </g>
+
+                <!-- torso -->
+                <g class="torso">
+                    <path d="M206,580 C206,478 222,424 264,404 Q320,386 376,404 C418,424 434,478 434,580 Z" fill="var(--sc-hoodie)" />
+                    <path d="M264,404 Q320,386 376,404" fill="none" stroke="var(--accent)" stroke-width="2" class="rim" />
+                    <path d="M272,400 Q320,376 368,400 Q350,420 320,422 Q290,420 272,400 Z" fill="var(--sc-hood)" />
+                </g>
+
+                <!-- head -->
+                <g class="head" data-head>
+                    <rect x="306" y="350" width="28" height="42" rx="10" fill="var(--sc-skin)" />
+                    <ellipse cx="320" cy="312" rx="44" ry="50" fill="var(--sc-hair)" />
+                    <path d="M290,284 q16,-14 34,-10 M300,300 q18,-10 34,-4 M292,318 q14,-6 26,-2" fill="none" stroke="var(--sc-hair-hi)" stroke-width="2" stroke-linecap="round" />
+                    <path d="M278,300 Q280,262 320,262 Q360,262 362,300" fill="none" stroke="var(--accent)" stroke-width="2" class="rim" />
+                    <ellipse cx="275" cy="322" rx="6" ry="10" fill="var(--sc-skin)" />
+                    <ellipse cx="365" cy="322" rx="6" ry="10" fill="var(--sc-skin)" />
+                    <!-- headphones -->
+                    <path d="M274,316 C272,246 368,246 366,316" fill="none" stroke="var(--sc-phones)" stroke-width="7" stroke-linecap="round" />
+                    <rect x="263" y="302" width="17" height="32" rx="7" fill="var(--sc-phones)" />
+                    <rect x="360" y="302" width="17" height="32" rx="7" fill="var(--sc-phones)" />
+                    <rect x="266" y="312" width="3" height="12" rx="1.5" fill="var(--accent)" />
+                    <rect x="371" y="312" width="3" height="12" rx="1.5" fill="var(--accent)" />
+                </g>
+            </g>
+
+            <!-- chair back: nearest to us, covers the lower back -->
+            <g class="chair">
+                <rect x="236" y="428" width="168" height="160" rx="36" fill="var(--sc-chair)" />
+                <rect x="252" y="446" width="136" height="120" rx="26" fill="none" stroke="var(--sc-chair-seam)" stroke-width="2" />
+                <path d="M262,432 Q320,424 378,432" fill="none" stroke="var(--sc-chair-hi)" stroke-width="2" stroke-linecap="round" />
+            </g>
+        </g>
+    </svg>
+</div>
+
+<style>
+    .scene {
+        /* light: daytime room */
+        --sc-paper: #fbf8f2;
+        --sc-frame: #2f3a4c;
+        --sc-sky: #cfe3ff;
+        --sc-hill: #5a9e6f;
+        --sc-tape: rgba(255, 255, 255, 0.7);
+        --sc-wire: #9aa3b2;
+        --sc-b1: #93a9ff;
+        --sc-b2: #ffb454;
+        --sc-b3: #5be3b0;
+        --sc-b4: #ff9fb2;
+        --sc-bulb-o: 0.35;
+        --sc-desk-top: #d8c3a5;
+        --sc-desk: #cdb593;
+        --sc-metal: #8e98a8;
+        --sc-monitor: #1d2330;
+        --sc-mug: #ffffff;
+        --sc-steam: rgba(86, 98, 115, 0.35);
+        --sc-leaf: #5a9e6f;
+        --sc-leaf-2: #4a8a5e;
+        --sc-case: #e6e9ef;
+        --sc-hoodie: #3a4a7a;
+        --sc-hood: #45568a;
+        --sc-skin: #b57a55;
+        --sc-hair: #1c1512;
+        --sc-hair-hi: #3a2d26;
+        --sc-phones: #eef1f6;
+        --sc-chair: #232833;
+        --sc-chair-seam: #2f3542;
+        --sc-chair-hi: #3a4252;
+        --sc-glow-o: 0.28;
+        --sc-rim-o: 0.25;
+        --sc-lamp-on: 0;
+
+        position: relative;
+        width: 100%;
+        max-width: 640px;
+        margin-inline: auto;
+        aspect-ratio: 640 / 560;
+    }
+
+    /* Night: lamp on, lights glow, the screen lights the room */
+    :global(:root[data-theme='dark']) .scene {
+        --sc-paper: #d9d4ca;
+        --sc-frame: #0a0e14;
+        --sc-sky: #1f2b4a;
+        --sc-hill: #2f5a45;
+        --sc-tape: rgba(255, 255, 255, 0.35);
+        --sc-wire: #3a4658;
+        --sc-bulb-o: 1;
+        --sc-desk-top: #3a3128;
+        --sc-desk: #2e2620;
+        --sc-metal: #4d5666;
+        --sc-monitor: #151a24;
+        --sc-mug: #cfd6e0;
+        --sc-steam: rgba(200, 210, 225, 0.35);
+        --sc-leaf: #3f7d55;
+        --sc-leaf-2: #356b49;
+        --sc-case: #1b222c;
+        --sc-hoodie: #26315a;
+        --sc-hood: #2f3b6a;
+        --sc-skin: #8f5f43;
+        --sc-hair: #120d0b;
+        --sc-hair-hi: #2a211c;
+        --sc-phones: #cfd6e0;
+        --sc-chair: #10141b;
+        --sc-chair-seam: #1b212b;
+        --sc-chair-hi: #262d39;
+        --sc-glow-o: 0.7;
+        --sc-rim-o: 0.75;
+        --sc-lamp-on: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :global(:root:not([data-theme='light'])) .scene {
+            --sc-paper: #d9d4ca;
+            --sc-frame: #0a0e14;
+            --sc-sky: #1f2b4a;
+            --sc-hill: #2f5a45;
+            --sc-tape: rgba(255, 255, 255, 0.35);
+            --sc-wire: #3a4658;
+            --sc-bulb-o: 1;
+            --sc-desk-top: #3a3128;
+            --sc-desk: #2e2620;
+            --sc-metal: #4d5666;
+            --sc-monitor: #151a24;
+            --sc-mug: #cfd6e0;
+            --sc-steam: rgba(200, 210, 225, 0.35);
+            --sc-leaf: #3f7d55;
+            --sc-leaf-2: #356b49;
+            --sc-case: #1b222c;
+            --sc-hoodie: #26315a;
+            --sc-hood: #2f3b6a;
+            --sc-skin: #8f5f43;
+            --sc-hair: #120d0b;
+            --sc-hair-hi: #2a211c;
+            --sc-phones: #cfd6e0;
+            --sc-chair: #10141b;
+            --sc-chair-seam: #1b212b;
+            --sc-chair-hi: #262d39;
+            --sc-glow-o: 0.7;
+            --sc-rim-o: 0.75;
+            --sc-lamp-on: 1;
+        }
+    }
+
+    /* A soft pool of page colour behind the scene so the hero's contour
+       lines fade out instead of running through the room */
+    .scene::before {
+        content: '';
+        position: absolute;
+        inset: -12% -10% -4%;
+        background: radial-gradient(closest-side, var(--bg) 62%, transparent);
+        z-index: -1;
+    }
+
+    .scene-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
+        mask-image: linear-gradient(to bottom, #000 82%, transparent);
+    }
+
+    /* Only animated groups pivot on their own box. Applying this to every
+       element would move the pivots of static transform="rotate(a cx cy)". */
+    .sway,
+    .note,
+    .leaves,
+    .fan,
+    .torso,
+    .head,
+    .arm,
+    .steam {
+        transform-box: fill-box;
+    }
+
+    /* ---------- type on the wall and screen ---------- */
+    .poster-big {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 36px;
+        letter-spacing: -0.04em;
+        fill: #ffffff;
+    }
+    .poster-out {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 1.2;
+    }
+    .poster-small {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        fill: #ffffff;
+        opacity: 0.8;
+    }
+    .note-text {
+        font-family: var(--font-mono);
+        font-size: 5.6px;
+        fill: rgba(0, 0, 0, 0.7);
+    }
+    .tab,
+    .status {
+        font-family: var(--font-mono);
+        font-size: 6.4px;
+        fill: #8c99aa;
+    }
+    .status {
+        fill: #c7d2ff;
+    }
+    :global(.scene .gutter text) {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        fill: #3d4a5c;
+    }
+    :global(.scene .code text) {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        white-space: pre;
+    }
+
+    /* ---------- ambient motion ---------- */
+    .glow {
+        opacity: var(--sc-glow-o);
+        animation: flicker 5s ease-in-out infinite;
+        transition: opacity 0.6s;
+    }
+    @keyframes flicker {
+        0%, 100% { opacity: var(--sc-glow-o); }
+        45% { opacity: calc(var(--sc-glow-o) * 0.82); }
+        55% { opacity: calc(var(--sc-glow-o) * 1.08); }
+    }
+
+    .rim {
+        opacity: var(--sc-rim-o);
+        animation: flicker-rim 5s ease-in-out infinite;
+    }
+    @keyframes flicker-rim {
+        0%, 100% { opacity: var(--sc-rim-o); }
+        50% { opacity: calc(var(--sc-rim-o) * 0.7); }
+    }
+
+    .bulb .bulb-halo {
+        opacity: calc(var(--sc-bulb-o) * 0.35);
+        animation: twinkle 2.8s ease-in-out infinite;
+        animation-delay: var(--d);
+    }
+    @keyframes twinkle {
+        50% { opacity: calc(var(--sc-bulb-o) * 0.08); }
+    }
+
+    .sway {
+        transform-origin: 50% 0%;
+        animation: sway 7s ease-in-out infinite;
+        animation-delay: var(--d);
+    }
+    @keyframes sway {
+        0%, 100% { rotate: 0deg; }
+        50% { rotate: 1.2deg; }
+    }
+
+    .note {
+        transform-origin: 50% 0%;
+        animation: flutter 3.6s ease-in-out infinite;
+        animation-delay: var(--d);
+    }
+    @keyframes flutter {
+        0%, 100% { rotate: 0deg; }
+        50% { rotate: -4deg; }
+    }
+
+    .lamp-cone,
+    .lamp-bulb {
+        opacity: var(--sc-lamp-on);
+        transition: opacity 0.6s;
+    }
+
+    .steam {
+        stroke-dasharray: 60;
+        animation: steam 3.2s ease-in-out infinite;
+    }
+    .steam.s2 {
+        animation-delay: 1.6s;
+    }
+    @keyframes steam {
+        0% { stroke-dashoffset: 60; opacity: 0; translate: 0 6px; }
+        30% { opacity: 1; }
+        100% { stroke-dashoffset: -60; opacity: 0; translate: 0 -10px; }
+    }
+
+    .leaves {
+        transform-origin: 50% 100%;
+        animation: sway 5s ease-in-out infinite;
+    }
+
+    .fan {
+        transform-origin: center;
+        animation: spin 1.1s linear infinite;
+    }
+    @keyframes spin {
+        to { rotate: 360deg; }
+    }
+
+    .rgb {
+        animation: hue 6s linear infinite;
+    }
+    @keyframes hue {
+        to { filter: hue-rotate(360deg); }
+    }
+
+    .power {
+        animation: pulse-led 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-led {
+        50% { opacity: 0.3; }
+    }
+
+    .caret {
+        animation: caret 1s steps(1) infinite;
+    }
+    @keyframes caret {
+        50% { opacity: 0; }
+    }
+
+    /* person: breathing always; arms tap only while typing */
+    .torso {
+        transform-origin: 50% 100%;
+        animation: breathe 4.2s ease-in-out infinite;
+    }
+    @keyframes breathe {
+        50% { scale: 1 1.012; }
+    }
+
+    .head {
+        transform-origin: 50% 100%;
+        animation: head-idle 6s ease-in-out infinite;
+    }
+    @keyframes head-idle {
+        0%, 100% { rotate: 0deg; }
+        30% { rotate: -1.2deg; }
+        70% { rotate: 1deg; }
+    }
+
+    .scene.is-typing .arm-l {
+        animation: tap 0.26s ease-in-out infinite alternate;
+    }
+    .scene.is-typing .arm-r {
+        animation: tap 0.26s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes tap {
+        to { translate: 0 2.5px; }
+    }
+
+    /* Thinking pause: head tilts, caret keeps blinking */
+    .scene.is-thinking .head {
+        animation: think 1.6s ease-in-out;
+    }
+    @keyframes think {
+        40%, 70% { rotate: -5deg; translate: -2px 1px; }
+    }
+
+    .scene.is-paused *,
+    .scene.is-paused {
+        animation-play-state: paused !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .scene * {
+            animation: none !important;
+        }
+    }
+</style>

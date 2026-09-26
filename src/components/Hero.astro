@@ -1,5 +1,6 @@
 ---
 import { person, posts, videos, yearsExperience, fmtDate, cleanTitle } from '../data/content';
+import Scene from './Scene.astro';
 
 const latestVideo = videos.find((v) => !v.short) ?? videos[0];
 const latestPost = posts[0];
@@ -10,6 +11,10 @@ const latestPost = posts[0];
     <div class="hero-fallback" aria-hidden="true"></div>
 
     <div class="wrap hero-inner">
+        <div class="hero-scene" data-hero-scene>
+            <Scene />
+        </div>
+
         <h1 class="hero-name" data-hero-name>
             <span class="hero-line">Urvil</span>
             <span class="hero-line">Joshi</span>
@@ -79,16 +84,58 @@ const latestPost = posts[0];
             radial-gradient(40% 40% at 90% 80%, color-mix(in srgb, var(--live) 8%, transparent), transparent 70%);
     }
 
+    /* Two columns on wide screens: words left, desk scene right.
+       Named areas keep the markup order (scene first, for its intro timing)
+       independent of where things sit. */
     .hero-inner {
         display: grid;
-        gap: clamp(20px, 3vw, 32px);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        grid-template-areas:
+            'name   scene'
+            'foot   scene'
+            'latest latest';
+        align-items: end;
+        gap: clamp(20px, 3vw, 32px) clamp(24px, 4vw, 64px);
+    }
+
+    .hero-name {
+        grid-area: name;
+    }
+
+    .hero-foot {
+        grid-area: foot;
+    }
+
+    .hero-scene {
+        grid-area: scene;
+        align-self: center;
+    }
+
+    .hero-latest {
+        grid-area: latest;
+    }
+
+    @media (max-width: 960px) {
+        .hero-inner {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+                'name'
+                'foot'
+                'scene'
+                'latest';
+        }
+        .hero-scene {
+            max-width: 520px;
+            width: 100%;
+            justify-self: center;
+        }
     }
 
     .hero-name {
         font-family: var(--font-display);
         font-optical-sizing: auto;
         font-weight: 600;
-        font-size: clamp(4.5rem, 15vw, 13rem);
+        font-size: clamp(4.25rem, 10.5vw, 10.5rem);
         line-height: 0.86;
         letter-spacing: -0.04em;
         margin-left: -0.04em;
@@ -100,23 +147,21 @@ const latestPost = posts[0];
     }
 
     .hero-line:nth-child(2) {
-        padding-left: clamp(0px, 9vw, 160px);
+        padding-left: clamp(0px, 5vw, 96px);
         color: var(--accent);
         transition: color var(--swap);
     }
 
     .hero-foot {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 24px 48px;
+        display: grid;
+        gap: 28px;
+        justify-items: start;
     }
 
     .hero-lede {
-        max-width: 46ch;
+        max-width: 44ch;
         color: var(--muted);
-        font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+        font-size: clamp(1.0625rem, 1.3vw, 1.2rem);
         line-height: 1.55;
     }
 

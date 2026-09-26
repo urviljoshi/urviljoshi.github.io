@@ -500,6 +500,7 @@ html.lenis body {
 [data-stagger] > *,
 [data-stagger-item],
 [data-hero-fade],
+[data-hero-scene],
 .role {
     --rx: 0px;
     --ry: 0px;
