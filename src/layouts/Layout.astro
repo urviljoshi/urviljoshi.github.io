@@ -12,7 +12,7 @@ const {
     description = 'Software Engineer II at HARMAN. Java, Spring Boot and microservices, plus writing and videos on AI-assisted development.'
 } = Astro.props;
 
-const site = Astro.site?.toString() ?? 'https://urviljoshi.github.io/';
+const site = Astro.site?.toString() ?? 'https://urvil.dev/';
 const ogImage = new URL('/images/og-image.png', site).toString();
 
 const personLd = {
@@ -20,7 +20,7 @@ const personLd = {
     '@type': 'Person',
     name: person.name,
     url: site,
-    image: new URL(person.portrait, site).toString(),
+    image: new URL(person.portraitShare, site).toString(),
     jobTitle: person.role,
     worksFor: { '@type': 'Organization', name: person.company },
     knowsAbout: ['Java', 'Spring Boot', 'Microservices', 'Distributed Systems', 'AI-assisted development'],

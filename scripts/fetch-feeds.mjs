@@ -25,7 +25,7 @@ const YT_FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNE
 const MAX_POSTS = 12;
 const MAX_VIDEOS = 12;
 
-const UA = 'Mozilla/5.0 (compatible; urviljoshi.github.io feed builder)';
+const UA = 'Mozilla/5.0 (compatible; urvil.dev feed builder)';
 
 /* ---------------- tiny XML helpers ---------------- */
 

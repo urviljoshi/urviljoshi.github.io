@@ -13,7 +13,8 @@ export const person = {
     email: 'urvvil08@gmail.com',
     phone: '+91 7568965601',
     resume: '/assets/resume.pdf',
-    portrait: '/images/profile.jpg',
+    portrait: '/images/profile.webp',
+    portraitShare: '/images/profile-640.jpg',
     careerStart: '2018-02'
 };
 

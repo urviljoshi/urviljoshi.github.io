@@ -1,50 +1,47 @@
-# urviljoshi.github.io
+# urvil.dev
 
-Personal site. Static HTML, CSS and vanilla JavaScript, served by GitHub Pages.
-No build step, no framework, no dependencies.
+Personal site of Urvil Joshi. Built with Astro, GSAP and Lenis, deployed to
+GitHub Pages at <https://urvil.dev>.
 
 ## Layout
 
 ```
-index.html              the whole page
-css/style.css           retro pixel-terminal theme, light + dark
-js/main.js              boot screen, theme, command palette, feeds
-data/feeds.json         generated — latest Medium posts and YouTube videos
-scripts/fetch-feeds.mjs generates the above
-images/og-image.png     1200x630 social preview card
+src/data/content.ts      everything the page says: roles, skills, projects, awards
+src/components/          one component per section, plus Scene.astro (the desk scene)
+src/scripts/main.ts      motion system: smooth scroll, reveals, tilt, theme switch
+src/scripts/scene.ts     the monitor story: hand-typed code and Claude Code sessions
+src/scripts/flux.ts      WebGL contour field behind the hero
+src/styles/global.css    design tokens (light + dark), cards, motion hooks
+scripts/fetch-feeds.mjs  pulls Medium + YouTube into data/feeds.json, mirrors thumbnails
+public/                  static files served as-is (CNAME, images, resume, certificates)
+design/                  source artwork, not shipped
 ```
 
-## Self-updating writing and video sections
-
-The writing and video sections read `data/feeds.json` instead of hard-coded
-markup, so they never go stale by hand.
-
-`.github/workflows/update-feeds.yml` runs daily at 05:30 UTC, fetches the
-Medium and YouTube RSS feeds, and commits the result only when a post or video
-actually changed. Neither feed sends CORS headers, so the page cannot fetch
-them directly from the browser; doing it in CI keeps the site same-origin and
-free of third-party services at runtime.
-
-Run it locally the same way CI does:
+## Develop
 
 ```bash
-node scripts/fetch-feeds.mjs
+npm install
+npm run feeds     # optional: refresh posts and videos
+npm run dev       # http://localhost:4321
+npm run build     # static output in dist/
 ```
 
-If one feed is unreachable, the script keeps the previously cached half rather
-than blanking the section. If `data/feeds.json` is missing entirely, the page
-falls back to the static article list in `index.html` and a link to the
-YouTube channel.
+Node 22.12 or newer.
 
-To point the feeds at different accounts, edit `MEDIUM_FEED` and
-`YT_CHANNEL_ID` at the top of `scripts/fetch-feeds.mjs`.
+## Deploy
 
-## Local preview
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`,
+every day at 05:30 UTC, and on demand from the Actions tab. The daily run is
+what keeps the writing and video sections current: it refreshes the feeds
+before building, so new posts and videos appear without a commit. If a feed
+is unreachable the committed `data/feeds.json` is used and the deploy still
+goes out.
 
-Any static server works, for example:
+GitHub Pages must be set to deploy from **GitHub Actions** (Settings, Pages,
+Source). The custom domain lives in `public/CNAME`.
 
-```bash
-python -m http.server 8000
-```
+## Editing content
 
-Then open <http://localhost:8000>.
+Change text in `src/data/content.ts`. Job durations and years of experience
+are computed at build time, so they never need updating by hand. The feed
+accounts are set at the top of `scripts/fetch-feeds.mjs`.
