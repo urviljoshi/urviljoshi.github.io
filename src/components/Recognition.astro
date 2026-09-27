@@ -108,6 +108,12 @@ import { awards, certifications, education, monthYear } from '../data/content';
         font-size: 0.9rem;
     }
 
+    @media (max-width: 600px) {
+        .awards {
+            grid-template-columns: 1fr;
+        }
+    }
+
     .learning {
         display: grid;
         grid-template-columns: 2fr 1fr;
@@ -152,9 +158,6 @@ import { awards, certifications, education, monthYear } from '../data/content';
     }
 
     @media (max-width: 900px) {
-        .awards {
-            grid-template-columns: 1fr;
-        }
         .learning {
             grid-template-columns: 1fr;
         }

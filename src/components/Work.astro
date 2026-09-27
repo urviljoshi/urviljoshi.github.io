@@ -214,12 +214,17 @@ import { work, sideProjects, monthYear, duration } from '../data/content';
     }
 
     @media (max-width: 900px) {
-        .feature-grid,
-        .side-grid {
+        .feature-grid {
             grid-template-columns: 1fr;
         }
         .feature {
             min-height: 0;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .side-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
