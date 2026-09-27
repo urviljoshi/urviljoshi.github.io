@@ -18,35 +18,61 @@ const bulbs = Array.from({ length: 11 }, (_, i) => {
     return { x, y, c: ['var(--sc-b1)', 'var(--sc-b2)', 'var(--sc-b3)', 'var(--sc-b4)'][i % 4], d: (i * 0.37) % 2.2 };
 });
 
-// Curly hair, generated with a fixed seed so it looks organic but never
-// changes between builds. Outer curls ring the skull from lower-left over
-// the crown to lower-right; smaller curls fringe the nape.
+// Curly hair, drawn the way flat illustrators do curls: a bumpy cloud
+// silhouette with extra volume on top, filled with rows of coils (a ring
+// with a darker core). Seeded, so it never changes between builds.
 const seed = (i: number) => {
     const x = Math.sin(i * 12.9898) * 43758.5453;
     return x - Math.floor(x);
 };
 const HX = 320;
-const HY = 300;
-const curls = Array.from({ length: 23 }, (_, i) => {
-    const a = ((150 + (i / 22) * 240) * Math.PI) / 180;
+const HY = 298;
+const deg = (d: number) => (d * Math.PI) / 180;
+const f1 = (n: number) => n.toFixed(1);
+
+type Blob = { x: number; y: number; r: number };
+const ring: Blob[] = Array.from({ length: 26 }, (_, i) => {
+    const a = deg(145 + (i / 25) * 250);
     return {
-        x: HX + Math.cos(a) * (48 + seed(i + 50) * 4),
-        y: HY + Math.sin(a) * (54 + seed(i + 80) * 4),
-        r: 13 + seed(i) * 6
+        x: HX + Math.cos(a) * (50 + seed(i + 50) * 5),
+        y: HY + Math.sin(a) * (54 + seed(i + 80) * 5),
+        r: 16 + seed(i) * 6
     };
 });
-const crown = Array.from({ length: 16 }, (_, i) => {
-    const a = seed(i + 200) * Math.PI * 2;
-    const d = Math.sqrt(seed(i + 300));
-    return { x: HX + Math.cos(a) * 36 * d, y: HY - 6 + Math.sin(a) * 40 * d, r: 9 + seed(i + 400) * 4 };
+const puffs: Blob[] = Array.from({ length: 6 }, (_, i) => {
+    const a = deg(228 + i * 17);
+    return { x: HX + Math.cos(a) * 36, y: HY + Math.sin(a) * 60, r: 18 + seed(i + 120) * 5 };
 });
-const nape = Array.from({ length: 7 }, (_, i) => {
-    const t = i / 6;
-    return { x: 286 + t * 68, y: 344 + Math.sin(t * Math.PI) * 6, r: 8 + seed(i + 500) * 3 };
+const nape: Blob[] = Array.from({ length: 8 }, (_, i) => {
+    const t = i / 7;
+    return { x: 282 + t * 76, y: 342 + Math.sin(t * Math.PI) * 8, r: 9 + seed(i + 500) * 3 };
 });
-/** A small open loop drawn inside a curl, so the mass reads as ringlets. */
-const loop = (c: { x: number; y: number; r: number }) =>
-    `M${(c.x - c.r * 0.45).toFixed(1)},${(c.y + c.r * 0.1).toFixed(1)} a${(c.r * 0.45).toFixed(1)},${(c.r * 0.45).toFixed(1)} 0 1 1 ${(c.r * 0.55).toFixed(1)},${(c.r * 0.35).toFixed(1)}`;
+const silhouette = [...ring, ...puffs, ...nape];
+
+// Locks on a jittered hex grid; each gets a spiral at its own angle
+type Lock = Blob & { a: number };
+const locks: Lock[] = [];
+for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 9; col++) {
+        const k = row * 9 + col;
+        locks.push({
+            x: 248 + col * 18 + (row % 2 ? 9 : 0) + (seed(k + 700) - 0.5) * 6,
+            y: 224 + row * 16.5 + (seed(k + 900) - 0.5) * 5,
+            r: 10.5 + seed(k + 1100) * 3.5,
+            a: seed(k + 1300) * 360
+        });
+    }
+}
+/** Three shrinking half-turns: reads as a ringlet at any size. */
+const spiral = (r: number) => {
+    const r1 = r * 0.62;
+    const r2 = r * 0.42;
+    const r3 = r * 0.24;
+    const p1 = -r1;
+    const p2 = p1 + 2 * r2;
+    const p3 = p2 - 2 * r3;
+    return `M${f1(r1)},0 A${f1(r1)},${f1(r1)} 0 0 1 ${f1(p1)},0 A${f1(r2)},${f1(r2)} 0 0 1 ${f1(p2)},0 A${f1(r3)},${f1(r3)} 0 0 1 ${f1(p3)},0`;
+};
 
 const notes = [
     { x: 516, y: 218, r: -8, c: '#ffe27a', text: 'ship it' },
@@ -161,9 +187,10 @@ const notes = [
             <g clip-path="url(#sc-screen-clip)" class="screen">
                 <!-- editor chrome -->
                 <rect x="162" y="177" width="316" height="17" fill="#151d2b" />
-                <rect x="168" y="180" width="94" height="14" rx="3" fill="#0e1522" />
-                <circle cx="175" cy="187" r="2.5" fill="#ffb454" />
+                <rect x="168" y="180" width="104" height="14" rx="3" fill="#0e1522" />
+                <circle cx="175" cy="187" r="2.5" fill="#ffb454" data-tabdot />
                 <text x="182" y="190" class="tab" data-tab>TelemetryController.java</text>
+                <g data-codebg></g>
                 <g data-gutter class="gutter"></g>
                 <g data-code class="code"></g>
                 <rect data-caret class="caret" x="192" y="201" width="5" height="10" fill="#f0566a" />
@@ -228,68 +255,96 @@ const notes = [
 
         <!-- ================= CHARACTER ================= -->
         <g data-layer="char" data-depth="22">
+            <!-- seated a little right of the monitor so the start of each line stays readable -->
+            <g transform="translate(62 14)">
             <g class="person" data-person>
                 <!-- arms: bare forearms, short tee sleeves over the shoulders -->
                 <g class="arm arm-l">
                     <path d="M236,424 Q208,454 214,492" fill="none" stroke="var(--sc-skin)" stroke-width="24" stroke-linecap="round" />
                     <path d="M214,492 L258,452" fill="none" stroke="var(--sc-skin)" stroke-width="20" stroke-linecap="round" />
                     <path d="M244,412 Q228,428 222,448" fill="none" stroke="var(--sc-shirt)" stroke-width="34" stroke-linecap="round" />
+                    <path d="M227,437 L221,451" fill="none" stroke="var(--accent)" stroke-width="35" stroke-dasharray="4 20" />
                 </g>
                 <g class="arm arm-r">
                     <path d="M404,424 Q432,454 426,492" fill="none" stroke="var(--sc-skin)" stroke-width="24" stroke-linecap="round" />
                     <path d="M426,492 L382,452" fill="none" stroke="var(--sc-skin)" stroke-width="20" stroke-linecap="round" />
                     <path d="M396,412 Q412,428 418,448" fill="none" stroke="var(--sc-shirt)" stroke-width="34" stroke-linecap="round" />
+                    <path d="M413,437 L419,451" fill="none" stroke="var(--accent)" stroke-width="35" stroke-dasharray="4 20" />
                 </g>
 
                 <!-- torso -->
                 <g class="torso">
                     <path d="M206,580 C206,478 222,424 264,404 Q320,386 376,404 C418,424 434,478 434,580 Z" fill="var(--sc-shirt)" />
                     <path d="M264,404 Q320,386 376,404" fill="none" stroke="var(--accent)" stroke-width="2" class="rim" />
-                    <path d="M296,390 Q320,404 344,390" fill="none" stroke="var(--sc-shirt-2)" stroke-width="6" stroke-linecap="round" />
+                    <path d="M294,390 Q320,406 346,390" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" />
+                    <text x="320" y="446" class="tee-print" text-anchor="middle">{'{ }'}</text>
+                    <text x="320" y="458" class="tee-label" text-anchor="middle">FLUXSTACK</text>
                 </g>
 
                 <!-- head -->
                 <g class="head" data-head>
+                    <defs>
+                        <clipPath id="sc-hair-clip">
+                            <ellipse cx="320" cy="298" rx="50" ry="54" />
+                            {silhouette.map((b) => (
+                                <circle cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} />
+                            ))}
+                        </clipPath>
+                    </defs>
+
                     <rect x="306" y="346" width="28" height="46" rx="10" fill="var(--sc-skin)" />
 
                     <!-- full beard, seen from behind as it fills out past the jaw -->
-                    <path d="M274,320 C270,352 284,378 306,382 L306,356 C296,352 290,340 290,324 Z" fill="var(--sc-hair)" />
-                    <path d="M366,320 C370,352 356,378 334,382 L334,356 C344,352 350,340 350,324 Z" fill="var(--sc-hair)" />
-                    <g fill="none" stroke="var(--sc-hair-hi)" stroke-width="1.6" stroke-linecap="round">
-                        <path d="M280,336 q4,10 10,18 M284,352 q6,8 12,14 M292,344 q3,8 8,14" />
-                        <path d="M360,336 q-4,10 -10,18 M356,352 q-6,8 -12,14 M348,344 q-3,8 -8,14" />
+                    <path d="M272,318 C266,354 282,382 306,386 L306,356 C295,352 289,340 289,322 Z" fill="var(--sc-hair)" />
+                    <path d="M368,318 C374,354 358,382 334,386 L334,356 C345,352 351,340 351,322 Z" fill="var(--sc-hair)" />
+                    <g fill="none" stroke="var(--sc-hair-mid)" stroke-width="1.8" stroke-linecap="round">
+                        <path d="M278,336 q4,12 12,20 M283,354 q6,10 14,16 M291,344 q3,9 9,15" />
+                        <path d="M362,336 q-4,12 -12,20 M357,354 q-6,10 -14,16 M349,344 q-3,9 -9,15" />
                     </g>
-                    <path d="M274,320 C270,352 284,378 306,382 M366,320 C370,352 356,378 334,382" fill="none" stroke="var(--accent)" stroke-width="1.5" class="rim" />
+                    <path d="M272,318 C266,354 282,382 306,386 M368,318 C374,354 358,382 334,386" fill="none" stroke="var(--accent)" stroke-width="1.5" class="rim" />
 
-                    <!-- curls -->
-                    <ellipse cx="320" cy="300" rx="48" ry="54" fill="var(--sc-hair)" />
-                    {curls.map((c) => (
-                        <circle cx={c.x.toFixed(1)} cy={c.y.toFixed(1)} r={c.r.toFixed(1)} fill="var(--sc-hair)" />
-                    ))}
-                    {nape.map((c) => (
-                        <circle cx={c.x.toFixed(1)} cy={c.y.toFixed(1)} r={c.r.toFixed(1)} fill="var(--sc-hair)" />
-                    ))}
-                    <g fill="none" stroke="var(--sc-hair-hi)" stroke-width="1.6" stroke-linecap="round" opacity="0.8">
-                        {[...curls, ...crown.slice(0, 11), ...nape].map((c) => (
-                            <path d={loop(c)} />
+                    <!-- curls: dark cloud, then coils clipped to it -->
+                    <g fill="var(--sc-hair)">
+                        <ellipse cx="320" cy="298" rx="50" ry="54" />
+                        {silhouette.map((b) => (
+                            <circle cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} />
                         ))}
                     </g>
-                    <path d="M262,300 Q262,226 320,224 Q378,226 378,300" fill="none" stroke="var(--accent)" stroke-width="2" class="rim" />
+                    <g clip-path="url(#sc-hair-clip)">
+                        {locks.map((l) => (
+                            <g transform={`translate(${f1(l.x)} ${f1(l.y)}) rotate(${l.a.toFixed(0)})`}>
+                                <circle r={f1(l.r)} fill="var(--sc-hair-mid)" stroke="var(--sc-hair)" stroke-width="1.6" />
+                                <path d={spiral(l.r)} fill="none" stroke="var(--sc-hair-hi)" stroke-width="1.9" stroke-linecap="round" />
+                            </g>
+                        ))}
+                    </g>
+                    <!-- screen light catching the outer curls -->
+                    <g fill="none" stroke="var(--accent)" stroke-width="1.6" class="rim">
+                        {[...ring.slice(4, 22), ...puffs].map((b) => {
+                            const a = Math.atan2(b.y - 298, b.x - 320);
+                            const x1 = b.x + Math.cos(a - 0.7) * b.r;
+                            const y1 = b.y + Math.sin(a - 0.7) * b.r;
+                            const x2 = b.x + Math.cos(a + 0.7) * b.r;
+                            const y2 = b.y + Math.sin(a + 0.7) * b.r;
+                            return <path d={`M${f1(x1)},${f1(y1)} A${f1(b.r)},${f1(b.r)} 0 0 1 ${f1(x2)},${f1(y2)}`} />;
+                        })}
+                    </g>
 
                     <!-- headphones, band pressed into the curls -->
-                    <path d="M266,322 C258,210 382,210 374,322" fill="none" stroke="var(--sc-phones)" stroke-width="7" stroke-linecap="round" />
-                    <rect x="257" y="306" width="18" height="34" rx="7" fill="var(--sc-phones)" />
-                    <rect x="365" y="306" width="18" height="34" rx="7" fill="var(--sc-phones)" />
-                    <rect x="260" y="317" width="3" height="12" rx="1.5" fill="var(--accent)" />
-                    <rect x="377" y="317" width="3" height="12" rx="1.5" fill="var(--accent)" />
+                    <path d="M263,324 C252,196 388,196 377,324" fill="none" stroke="var(--sc-phones)" stroke-width="7" stroke-linecap="round" />
+                    <rect x="253" y="306" width="19" height="36" rx="7.5" fill="var(--sc-phones)" />
+                    <rect x="368" y="306" width="19" height="36" rx="7.5" fill="var(--sc-phones)" />
+                    <rect x="256" y="318" width="3" height="12" rx="1.5" fill="var(--accent)" />
+                    <rect x="381" y="318" width="3" height="12" rx="1.5" fill="var(--accent)" />
                 </g>
             </g>
 
             <!-- chair back: nearest to us, covers the lower back -->
             <g class="chair">
-                <rect x="236" y="428" width="168" height="160" rx="36" fill="var(--sc-chair)" />
-                <rect x="252" y="446" width="136" height="120" rx="26" fill="none" stroke="var(--sc-chair-seam)" stroke-width="2" />
-                <path d="M262,432 Q320,424 378,432" fill="none" stroke="var(--sc-chair-hi)" stroke-width="2" stroke-linecap="round" />
+                <rect x="236" y="468" width="168" height="130" rx="32" fill="var(--sc-chair)" />
+                <rect x="252" y="484" width="136" height="100" rx="24" fill="none" stroke="var(--sc-chair-seam)" stroke-width="2" />
+                <path d="M262,472 Q320,464 378,472" fill="none" stroke="var(--sc-chair-hi)" stroke-width="2" stroke-linecap="round" />
+            </g>
             </g>
         </g>
     </svg>
@@ -318,11 +373,11 @@ const notes = [
         --sc-leaf: #5a9e6f;
         --sc-leaf-2: #4a8a5e;
         --sc-case: #e6e9ef;
-        --sc-shirt: #2f4fb3;
-        --sc-shirt-2: #243f94;
+        --sc-shirt: #1d1b1c;
         --sc-skin: #d9a07e;
         --sc-hair: #141010;
-        --sc-hair-hi: #3a302c;
+        --sc-hair-mid: #221e1d;
+        --sc-hair-hi: #4a4340;
         --sc-phones: #eef1f6;
         --sc-chair: #232833;
         --sc-chair-seam: #2f3542;
@@ -356,11 +411,11 @@ const notes = [
         --sc-leaf: #3f7d55;
         --sc-leaf-2: #356b49;
         --sc-case: #1b222c;
-        --sc-shirt: #233a82;
-        --sc-shirt-2: #1c2f6a;
+        --sc-shirt: #141213;
         --sc-skin: #a8765c;
         --sc-hair: #0d0a09;
-        --sc-hair-hi: #2e2521;
+        --sc-hair-mid: #1b1817;
+        --sc-hair-hi: #3a3432;
         --sc-phones: #cfd6e0;
         --sc-chair: #10141b;
         --sc-chair-seam: #1b212b;
@@ -388,11 +443,11 @@ const notes = [
             --sc-leaf: #3f7d55;
             --sc-leaf-2: #356b49;
             --sc-case: #1b222c;
-            --sc-shirt: #233a82;
-            --sc-shirt-2: #1c2f6a;
+            --sc-shirt: #141213;
             --sc-skin: #a8765c;
             --sc-hair: #0d0a09;
-            --sc-hair-hi: #2e2521;
+            --sc-hair-mid: #1b1817;
+            --sc-hair-hi: #3a3432;
             --sc-phones: #cfd6e0;
             --sc-chair: #10141b;
             --sc-chair-seam: #1b212b;
@@ -452,6 +507,20 @@ const notes = [
         font-size: 9px;
         fill: #ffffff;
         opacity: 0.8;
+    }
+    .tee-print {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.04em;
+        fill: var(--accent);
+    }
+    .tee-label {
+        font-family: var(--font-mono);
+        font-size: 6.4px;
+        letter-spacing: 0.3em;
+        fill: #efe9e7;
+        opacity: 0.85;
     }
     .note-text {
         font-family: var(--font-mono);

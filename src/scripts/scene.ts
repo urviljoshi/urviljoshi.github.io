@@ -1,74 +1,111 @@
 /* ========================================================================
-   Desk scene: live typing on the monitor, cursor parallax, and the
-   small human beats (thinking pauses, leaning back when a file is done).
-   Everything stops when the scene is off screen or the tab is hidden.
+   Desk scene: the monitor tells a small story of pairing with Claude Code.
+
+     1. Urvil types a controller by hand           (editor, human speed)
+     2. asks Claude Code to add retry with backoff (terminal: prompt, thinking,
+                                                    tool calls, a diff, tests)
+     3. reviews the change in the editor           (changed line highlighted)
+     4. asks for a Kafka consumer                  (terminal)
+     5. opens the new file                         (editor)
+
+   His keystrokes are slow and uneven; Claude's output streams in fast, so
+   it is always clear who is doing what. Everything waits while the scene is
+   off screen or the tab is hidden.
    ======================================================================== */
 
 import { gsap } from 'gsap';
 
-type Snippet = { tab: string; status: string; lang: 'java' | 'shell'; lines: string[] };
+/* ---------------- script ---------------- */
 
-const SNIPPETS: Snippet[] = [
-    {
-        tab: 'TelemetryController.java',
-        status: 'Java · UTF-8',
-        lang: 'java',
-        lines: [
-            '@RestController',
-            'class TelemetryController {',
-            '',
-            '  private final VehicleService vehicles;',
-            '',
-            '  @GetMapping("/vehicles/{id}/events")',
-            '  Flux<Event> stream(@PathVariable String id) {',
-            '    return vehicles.events(id)',
-            '        .filter(Event::isCritical)',
-            '        .onBackpressureBuffer(256)',
-            '        .retryWhen(Retry.backoff(3, ofMillis(200)));',
-            '  }',
-            '}'
-        ]
-    },
-    {
-        tab: 'EventConsumer.java',
-        status: 'Java · UTF-8',
-        lang: 'java',
-        lines: [
-            '@Component',
-            'class EventConsumer {',
-            '',
-            '  @KafkaListener(topics = "vehicle.events")',
-            '  void onEvent(Event event, Acknowledgment ack) {',
-            '    if (event.isDuplicate()) {',
-            '      ack.acknowledge();',
-            '      return;',
-            '    }',
-            '    store.save(event);',
-            '    ack.acknowledge();',
-            '  }',
-            '}'
-        ]
-    },
-    {
-        tab: 'zsh — telemetry',
-        status: 'zsh',
-        lang: 'shell',
-        lines: [
-            '$ claude "add retry with backoff to the event stream"',
-            '',
-            '● Reading TelemetryController.java',
-            '● Editing stream() to use Retry.backoff',
-            '● Running ./mvnw test',
-            '  Tests run: 42, Failures: 0, Errors: 0',
-            '',
-            '✓ Done in 38s',
-            '',
-            '$ git commit -am "retry event stream with backoff"',
-            '[main 4f2c1a9] retry event stream with backoff',
-            '$ '
-        ]
-    }
+type Tok = { t: string; c: string; w?: number };
+
+type EditorStep = { kind: 'type' | 'open'; tab: string; lines: string[]; highlight?: number[]; hold?: number };
+type ClaudeLine =
+    | { k: 'prompt'; t: string }
+    | { k: 'think'; ms: number }
+    | { k: 'tool'; name: string; arg: string }
+    | { k: 'out'; t: string }
+    | { k: 'add'; t: string }
+    | { k: 'del'; t: string }
+    | { k: 'say'; t: string }
+    | { k: 'blank' };
+type ClaudeStep = { kind: 'claude'; tab: string; lines: ClaudeLine[] };
+type Step = EditorStep | ClaudeStep;
+
+const CONTROLLER = [
+    '@RestController',
+    'class TelemetryController {',
+    '',
+    '  private final VehicleService vehicles;',
+    '',
+    '  @GetMapping("/vehicles/{id}/events")',
+    '  Flux<Event> stream(@PathVariable String id) {',
+    '    return vehicles.events(id)',
+    '        .filter(Event::isCritical)',
+    '        .retry(3);',
+    '  }',
+    '}'
 ];
+const CONTROLLER_AFTER = CONTROLLER.map((l) =>
+    l === '        .retry(3);' ? '        .retryWhen(Retry.backoff(3, ofMillis(200)));' : l
+);
+
+const CONSUMER = [
+    '@Component',
+    'class EventConsumer {',
+    '',
+    '  @KafkaListener(topics = "vehicle.events")',
+    '  void onEvent(Event event, Acknowledgment ack) {',
+    '    if (!seen.add(event.id())) {',
+    '      ack.acknowledge();',
+    '      return;',
+    '    }',
+    '    store.save(event);',
+    '    ack.acknowledge();',
+    '  }',
+    '}'
+];
+
+const STORY: Step[] = [
+    { kind: 'type', tab: 'TelemetryController.java', lines: CONTROLLER },
+    {
+        kind: 'claude',
+        tab: 'claude — telemetry',
+        lines: [
+            { k: 'prompt', t: 'add retry with backoff to the event stream' },
+            { k: 'blank' },
+            { k: 'think', ms: 1800 },
+            { k: 'tool', name: 'Read', arg: 'TelemetryController.java' },
+            { k: 'out', t: '⎿  Read 12 lines' },
+            { k: 'tool', name: 'Update', arg: 'TelemetryController.java' },
+            { k: 'del', t: '-        .retry(3);' },
+            { k: 'add', t: '+        .retryWhen(Retry.backoff(3, ofMillis(200)));' },
+            { k: 'tool', name: 'Bash', arg: './mvnw test' },
+            { k: 'out', t: '⎿  Tests run: 42, Failures: 0' },
+            { k: 'blank' },
+            { k: 'say', t: 'Done. The stream now retries with backoff.' }
+        ]
+    },
+    { kind: 'open', tab: 'TelemetryController.java', lines: CONTROLLER_AFTER, highlight: [9], hold: 3600 },
+    {
+        kind: 'claude',
+        tab: 'claude — telemetry',
+        lines: [
+            { k: 'prompt', t: 'write a Kafka consumer that skips duplicates' },
+            { k: 'blank' },
+            { k: 'think', ms: 2200 },
+            { k: 'tool', name: 'Write', arg: 'EventConsumer.java' },
+            { k: 'out', t: '⎿  Wrote 13 lines to EventConsumer.java' },
+            { k: 'tool', name: 'Bash', arg: './mvnw test' },
+            { k: 'out', t: '⎿  Tests run: 44, Failures: 0' },
+            { k: 'blank' },
+            { k: 'say', t: 'Added EventConsumer. Duplicates are acked, not saved.' }
+        ]
+    },
+    { kind: 'open', tab: 'EventConsumer.java', lines: CONSUMER, highlight: [5, 6, 7, 8], hold: 3600 }
+];
+
+/* ---------------- colours ---------------- */
 
 const C = {
     plain: '#d6deeb',
@@ -78,14 +115,22 @@ const C = {
     type: '#ff8a8a',
     number: '#f78c6c',
     punct: '#89ddff',
-    prompt: '#5be3b0',
-    muted: '#637089',
-    ok: '#5be3b0'
+    // Claude Code terminal
+    claude: '#d97757',
+    promptMark: '#8a93a3',
+    user: '#eef1f5',
+    ok: '#5be3b0',
+    toolName: '#eef1f5',
+    toolArg: '#9aa6b6',
+    muted: '#7f8a9a',
+    addText: '#7ee2b8',
+    delText: '#ff9a9a',
+    addBg: 'rgba(46, 160, 67, 0.2)',
+    delBg: 'rgba(248, 81, 73, 0.2)',
+    editBg: 'rgba(91, 227, 176, 0.1)'
 };
 
 const KEYWORDS = new Set(['return', 'private', 'final', 'class', 'public', 'new', 'static', 'void', 'if', 'else']);
-
-type Tok = { t: string; c: string };
 
 function tokenizeJava(line: string): Tok[] {
     const out: Tok[] = [];
@@ -103,47 +148,43 @@ function tokenizeJava(line: string): Tok[] {
     return out;
 }
 
-function tokenizeShell(line: string): Tok[] {
-    if (line.startsWith('$ ')) {
-        const rest = line.slice(2);
-        const q = rest.indexOf('"');
-        if (q < 0) return [{ t: '$ ', c: C.prompt }, { t: rest, c: C.plain }];
-        return [
-            { t: '$ ', c: C.prompt },
-            { t: rest.slice(0, q), c: C.plain },
-            { t: rest.slice(q), c: C.string }
-        ];
-    }
-    if (line.startsWith('●')) return [{ t: '● ', c: C.type }, { t: line.slice(2), c: C.plain }];
-    if (line.startsWith('✓')) return [{ t: line, c: C.ok }];
-    return [{ t: line, c: C.muted }];
-}
+/* ---------------- layout ---------------- */
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const X0 = 192;          // code column
 const Y0 = 209;          // first baseline
 const LH = 12.4;         // line height
 const CW = 8.5 * 0.6;    // monospace advance at 8.5px
+const X_EDITOR = 192;
+const X_TERM = 170;
+const SPINNER = ['·', '✢', '✳', '∗', '✻', '✽', '✻', '∗', '✳', '✢'];
 
 export function initScene(root: HTMLElement, opts: { reduced: boolean; finePointer: boolean }) {
-    const code = root.querySelector<SVGGElement>('[data-code]');
-    const gutter = root.querySelector<SVGGElement>('[data-gutter]');
-    const caret = root.querySelector<SVGRectElement>('[data-caret]');
-    const tab = root.querySelector<SVGTextElement>('[data-tab]');
-    const status = root.querySelector<SVGTextElement>('[data-status]');
-    const person = root.querySelector<SVGGElement>('[data-person]');
-    if (!code || !gutter || !caret || !tab || !status) return;
+    const $ = <T extends Element>(sel: string) => root.querySelector<T>(sel);
+    const code = $<SVGGElement>('[data-code]');
+    const bg = $<SVGGElement>('[data-codebg]');
+    const gutter = $<SVGGElement>('[data-gutter]');
+    const caret = $<SVGRectElement>('[data-caret]');
+    const tab = $<SVGTextElement>('[data-tab]');
+    const tabDot = $<SVGCircleElement>('[data-tabdot]');
+    const status = $<SVGTextElement>('[data-status]');
+    const person = $<SVGGElement>('[data-person]');
+    if (!code || !bg || !gutter || !caret || !tab || !status) return;
 
     let alive = true;
     let visible = true;
     let wake: (() => void) | null = null;
+    let x0 = X_EDITOR;
 
-    // Typing waits (not skips) while hidden, so it resumes mid-line
+    // Waits pause (never skip) while hidden, so the story resumes mid-line
     const sleep = (ms: number) =>
         new Promise<void>((resolve) => {
             const start = () => setTimeout(resolve, ms);
             if (visible && !document.hidden) start();
-            else wake = () => { wake = null; start(); };
+            else
+                wake = () => {
+                    wake = null;
+                    start();
+                };
         });
 
     const setVisible = (v: boolean) => {
@@ -151,56 +192,110 @@ export function initScene(root: HTMLElement, opts: { reduced: boolean; finePoint
         root.classList.toggle('is-paused', !v || document.hidden);
         if (v && !document.hidden && wake) wake();
     };
-
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.05 });
     io.observe(root);
     document.addEventListener('visibilitychange', () => setVisible(visible));
 
-    const moveCaret = (line: number, col: number) => {
-        caret.setAttribute('x', String(X0 + col * CW));
-        caret.setAttribute('y', String(Y0 + line * LH - 8.5));
-    };
+    /* ----- drawing helpers ----- */
 
-    const makeLine = (i: number) => {
-        const num = document.createElementNS(SVG_NS, 'text');
-        num.setAttribute('x', String(X0 - 8));
-        num.setAttribute('y', String(Y0 + i * LH));
-        num.setAttribute('text-anchor', 'end');
-        num.textContent = String(i + 1);
-        gutter.appendChild(num);
+    const baseline = (row: number) => Y0 + row * LH;
 
-        const text = document.createElementNS(SVG_NS, 'text');
-        text.setAttribute('x', String(X0));
-        text.setAttribute('y', String(Y0 + i * LH));
-        text.setAttribute('xml:space', 'preserve');
-        code.appendChild(text);
-        return text;
+    const moveCaret = (row: number, col: number) => {
+        caret.setAttribute('x', String(x0 + col * CW));
+        caret.setAttribute('y', String(baseline(row) - 8.5));
     };
+    const showCaret = (on: boolean) => caret.setAttribute('visibility', on ? 'visible' : 'hidden');
 
     const clear = () => {
         code.replaceChildren();
+        bg.replaceChildren();
         gutter.replaceChildren();
-        moveCaret(0, 0);
     };
 
-    const tokens = (s: Snippet, line: string) => (s.lang === 'java' ? tokenizeJava(line) : tokenizeShell(line));
+    const setMode = (mode: 'editor' | 'claude', title: string) => {
+        x0 = mode === 'editor' ? X_EDITOR : X_TERM;
+        tab.textContent = title;
+        tabDot?.setAttribute('fill', mode === 'editor' ? '#ffb454' : C.claude);
+        status.textContent = mode === 'editor' ? 'Java · UTF-8' : 'Claude Code';
+        gutter.setAttribute('visibility', mode === 'editor' ? 'visible' : 'hidden');
+    };
 
-    /** Render a snippet instantly (reduced motion). */
-    const renderAll = (s: Snippet) => {
-        clear();
-        tab.textContent = s.tab;
-        status.textContent = s.status;
-        s.lines.forEach((line, i) => {
-            const text = makeLine(i);
-            for (const tok of tokens(s, line)) {
-                const span = document.createElementNS(SVG_NS, 'tspan');
-                span.setAttribute('fill', tok.c);
-                span.textContent = tok.t;
-                text.appendChild(span);
+    const lineNumber = (row: number) => {
+        const n = document.createElementNS(SVG_NS, 'text');
+        n.setAttribute('x', String(X_EDITOR - 8));
+        n.setAttribute('y', String(baseline(row)));
+        n.setAttribute('text-anchor', 'end');
+        n.textContent = String(row + 1);
+        gutter.appendChild(n);
+    };
+
+    const textRow = (row: number) => {
+        const t = document.createElementNS(SVG_NS, 'text');
+        t.setAttribute('x', String(x0));
+        t.setAttribute('y', String(baseline(row)));
+        code.appendChild(t);
+        return t;
+    };
+
+    const span = (parent: SVGTextElement, tok: Tok, text = tok.t) => {
+        const s = document.createElementNS(SVG_NS, 'tspan');
+        s.setAttribute('fill', tok.c);
+        if (tok.w) s.setAttribute('font-weight', String(tok.w));
+        s.textContent = text;
+        parent.appendChild(s);
+        return s;
+    };
+
+    const fillRow = (row: number, color: string, bar?: string) => {
+        const r = document.createElementNS(SVG_NS, 'rect');
+        r.setAttribute('x', '162');
+        r.setAttribute('y', String(baseline(row) - 9.2));
+        r.setAttribute('width', '316');
+        r.setAttribute('height', String(LH));
+        r.setAttribute('fill', color);
+        bg.appendChild(r);
+        if (bar) {
+            const b = document.createElementNS(SVG_NS, 'rect');
+            b.setAttribute('x', '162');
+            b.setAttribute('y', String(baseline(row) - 9.2));
+            b.setAttribute('width', '2');
+            b.setAttribute('height', String(LH));
+            b.setAttribute('fill', bar);
+            bg.appendChild(b);
+        }
+    };
+
+    const promptBox = (row: number) => {
+        const r = document.createElementNS(SVG_NS, 'rect');
+        r.setAttribute('x', '166');
+        r.setAttribute('y', String(baseline(row) - 10));
+        r.setAttribute('width', '306');
+        r.setAttribute('height', '14');
+        r.setAttribute('rx', '3');
+        r.setAttribute('fill', 'none');
+        r.setAttribute('stroke', '#5a6070');
+        r.setAttribute('stroke-width', '0.8');
+        bg.appendChild(r);
+        return r;
+    };
+
+    /** Human typing: uneven, with arms tapping. */
+    async function typeTokens(row: number, text: SVGTextElement, toks: Tok[], startCol = 0, skipIndent = true) {
+        const indent = skipIndent ? (toks[0]?.t.match(/^\s*/)?.[0].length ?? 0) : 0;
+        let col = startCol;
+        root.classList.add('is-typing');
+        for (const tok of toks) {
+            const s = span(text, tok, '');
+            for (let k = 1; k <= tok.t.length && alive; k++) {
+                s.textContent = tok.t.slice(0, k);
+                col++;
+                moveCaret(row, col);
+                if (col - startCol <= indent) continue;
+                await sleep(24 + Math.random() * 50);
             }
-        });
-        moveCaret(s.lines.length - 1, s.lines[s.lines.length - 1].length);
-    };
+        }
+        root.classList.remove('is-typing');
+    }
 
     const beat = (cls: string, ms: number) => {
         root.classList.add(cls);
@@ -214,65 +309,169 @@ export function initScene(root: HTMLElement, opts: { reduced: boolean; finePoint
             .to(person, { y: 0, scale: 1, rotation: 0, duration: 1.1, ease: 'power2.inOut' }, '+=1');
     };
 
-    async function typeSnippet(s: Snippet) {
-        clear();
-        tab.textContent = s.tab;
-        status.textContent = s.status;
+    const renderFile = (lines: string[], highlight: number[] = []) => {
+        lines.forEach((line, row) => {
+            lineNumber(row);
+            if (highlight.includes(row)) fillRow(row, C.editBg, C.ok);
+            const t = textRow(row);
+            tokenizeJava(line).forEach((tok) => span(t, tok));
+        });
+    };
 
-        for (let i = 0; i < s.lines.length && alive; i++) {
-            const text = makeLine(i);
-            moveCaret(i, 0);
-            const line = s.lines[i];
+    /* ----- editor ----- */
+
+    async function runEditor(step: EditorStep) {
+        clear();
+        setMode('editor', step.tab);
+        showCaret(true);
+
+        if (step.kind === 'open') {
+            // Claude wrote this: it appears at once, with the changes marked
+            renderFile(step.lines, step.highlight);
+            const last = step.highlight?.[step.highlight.length - 1] ?? 0;
+            moveCaret(last, step.lines[last].length);
+            beat('is-thinking', 1600); // reading it over
+            await sleep(step.hold ?? 3000);
+            leanBack();
+            await sleep(2200);
+            return;
+        }
+
+        for (let row = 0; row < step.lines.length && alive; row++) {
+            lineNumber(row);
+            const t = textRow(row);
+            moveCaret(row, 0);
+            const line = step.lines[row];
             if (!line) {
                 await sleep(90);
                 continue;
             }
-
-            // Leading indent appears at once, like an editor auto-indent
-            const indent = line.match(/^\s*/)![0].length;
-            let col = 0;
-            root.classList.add('is-typing');
-
-            for (const tok of tokens(s, line)) {
-                const span = document.createElementNS(SVG_NS, 'tspan');
-                span.setAttribute('fill', tok.c);
-                text.appendChild(span);
-                for (let k = 1; k <= tok.t.length && alive; k++) {
-                    span.textContent = tok.t.slice(0, k);
-                    col++;
-                    moveCaret(i, col);
-                    if (col <= indent) continue;
-                    await sleep(22 + Math.random() * 46);
-                }
-            }
-
-            root.classList.remove('is-typing');
-            // Every few lines, stop and think
-            if (Math.random() < 0.22) {
+            await typeTokens(row, t, tokenizeJava(line));
+            if (Math.random() < 0.2) {
                 beat('is-thinking', 1600);
-                await sleep(1500);
+                await sleep(1400);
             } else {
                 await sleep(140 + Math.random() * 220);
             }
         }
-
-        await sleep(500);
-        leanBack();
-        await sleep(3000);
+        await sleep(1400);
     }
 
+    /* ----- Claude Code ----- */
+
+    async function runClaude(step: ClaudeStep) {
+        clear();
+        setMode('claude', step.tab);
+        let row = 0;
+
+        for (const line of step.lines) {
+            if (!alive) return;
+            switch (line.k) {
+                case 'prompt': {
+                    // He types the request into the input box
+                    const box = promptBox(row);
+                    const t = textRow(row);
+                    span(t, { t: '> ', c: C.promptMark });
+                    showCaret(true);
+                    moveCaret(row, 2);
+                    await sleep(500);
+                    await typeTokens(row, t, [{ t: line.t, c: C.user }], 2, false);
+                    await sleep(450);
+                    // Enter: the box becomes a sent message
+                    box.remove();
+                    fillRow(row, 'rgba(255,255,255,0.05)');
+                    showCaret(false);
+                    row++;
+                    break;
+                }
+                case 'think': {
+                    const t = textRow(row);
+                    const glyph = span(t, { t: SPINNER[0], c: C.claude });
+                    span(t, { t: ' Thinking… ', c: C.claude });
+                    span(t, { t: '(esc to interrupt)', c: C.muted });
+                    beat('is-thinking', line.ms);
+                    const frames = Math.round(line.ms / 110);
+                    for (let i = 0; i < frames && alive; i++) {
+                        glyph.textContent = SPINNER[i % SPINNER.length];
+                        await sleep(110);
+                    }
+                    t.remove(); // output takes the spinner's place
+                    break;
+                }
+                case 'tool': {
+                    const t = textRow(row);
+                    span(t, { t: '● ', c: C.ok });
+                    span(t, { t: line.name, c: C.toolName, w: 600 });
+                    span(t, { t: `(${line.arg})`, c: C.toolArg });
+                    row++;
+                    await sleep(420 + Math.random() * 260);
+                    break;
+                }
+                case 'out': {
+                    const t = textRow(row);
+                    span(t, { t: '  ' + line.t, c: C.muted });
+                    row++;
+                    await sleep(260);
+                    break;
+                }
+                case 'add':
+                case 'del': {
+                    fillRow(row, line.k === 'add' ? C.addBg : C.delBg);
+                    const t = textRow(row);
+                    span(t, { t: '  ' + line.t, c: line.k === 'add' ? C.addText : C.delText });
+                    row++;
+                    await sleep(220);
+                    break;
+                }
+                case 'say': {
+                    // Claude's reply streams in word by word, much faster than typing
+                    const t = textRow(row);
+                    span(t, { t: '● ', c: C.user });
+                    const s = span(t, { t: '', c: C.user });
+                    const words = line.t.split(' ');
+                    for (let i = 0; i < words.length && alive; i++) {
+                        s.textContent = words.slice(0, i + 1).join(' ');
+                        await sleep(55);
+                    }
+                    row++;
+                    break;
+                }
+                case 'blank':
+                    row++;
+                    break;
+            }
+        }
+
+        // Ready for the next request
+        row++;
+        promptBox(row);
+        const t = textRow(row);
+        span(t, { t: '> ', c: C.promptMark });
+        showCaret(true);
+        moveCaret(row, 2);
+        await sleep(2400);
+    }
+
+    /* ----- run ----- */
+
     if (opts.reduced) {
-        renderAll(SNIPPETS[0]);
+        // One still frame that tells the whole story: the reviewed change
+        const s = STORY[2] as EditorStep;
+        setMode('editor', s.tab);
+        renderFile(s.lines, s.highlight);
+        showCaret(false);
         return;
     }
 
     (async () => {
-        for (let n = 0; alive; n = (n + 1) % SNIPPETS.length) {
-            await typeSnippet(SNIPPETS[n]);
+        for (let i = 0; alive; i = (i + 1) % STORY.length) {
+            const step = STORY[i];
+            if (step.kind === 'claude') await runClaude(step);
+            else await runEditor(step);
         }
     })();
 
-    // Cursor parallax: far layers move less than near ones
+    /* ----- cursor parallax: far layers move less than near ones ----- */
     if (opts.finePointer) {
         const layers = Array.from(root.querySelectorAll<SVGGElement>('[data-layer]')).map((el) => ({
             depth: Number(el.dataset.depth ?? 10),
