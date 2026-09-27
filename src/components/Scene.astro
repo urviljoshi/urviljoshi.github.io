@@ -18,61 +18,57 @@ const bulbs = Array.from({ length: 11 }, (_, i) => {
     return { x, y, c: ['var(--sc-b1)', 'var(--sc-b2)', 'var(--sc-b3)', 'var(--sc-b4)'][i % 4], d: (i * 0.37) % 2.2 };
 });
 
-// Curly hair, drawn the way flat illustrators do curls: a bumpy cloud
-// silhouette with extra volume on top, filled with rows of coils (a ring
-// with a darker core). Seeded, so it never changes between builds.
+// Wavy curls. The silhouette is an ellipse whose radius rides two sine
+// waves, flattened into a soft wavy line at the nape. Inside, S-shaped
+// strands flow out from the crown; each wave swings wider as the strand
+// gets longer, and a light gravity term makes the side strands fall.
+// Seeded, so the hair is identical on every build.
 const seed = (i: number) => {
     const x = Math.sin(i * 12.9898) * 43758.5453;
     return x - Math.floor(x);
 };
-const HX = 320;
-const HY = 298;
-const deg = (d: number) => (d * Math.PI) / 180;
 const f1 = (n: number) => n.toFixed(1);
+const HX = 320;
+const HY = 292;
 
-type Blob = { x: number; y: number; r: number };
-const ring: Blob[] = Array.from({ length: 26 }, (_, i) => {
-    const a = deg(145 + (i / 25) * 250);
-    return {
-        x: HX + Math.cos(a) * (50 + seed(i + 50) * 5),
-        y: HY + Math.sin(a) * (54 + seed(i + 80) * 5),
-        r: 16 + seed(i) * 6
-    };
-});
-const puffs: Blob[] = Array.from({ length: 6 }, (_, i) => {
-    const a = deg(228 + i * 17);
-    return { x: HX + Math.cos(a) * 36, y: HY + Math.sin(a) * 60, r: 18 + seed(i + 120) * 5 };
-});
-const nape: Blob[] = Array.from({ length: 8 }, (_, i) => {
-    const t = i / 7;
-    return { x: 282 + t * 76, y: 342 + Math.sin(t * Math.PI) * 8, r: 9 + seed(i + 500) * 3 };
-});
-const silhouette = [...ring, ...puffs, ...nape];
-
-// Locks on a jittered hex grid; each gets a spiral at its own angle
-type Lock = Blob & { a: number };
-const locks: Lock[] = [];
-for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 9; col++) {
-        const k = row * 9 + col;
-        locks.push({
-            x: 248 + col * 18 + (row % 2 ? 9 : 0) + (seed(k + 700) - 0.5) * 6,
-            y: 224 + row * 16.5 + (seed(k + 900) - 0.5) * 5,
-            r: 10.5 + seed(k + 1100) * 3.5,
-            a: seed(k + 1300) * 360
-        });
-    }
+const outline: [number, number][] = [];
+for (let i = 0; i <= 200; i++) {
+    const t = (i / 200) * Math.PI * 2;
+    const wave = 1 + 0.07 * Math.sin(t * 9 + 0.6) + 0.03 * Math.sin(t * 4 + 1.3);
+    const x = HX + Math.cos(t) * 64 * wave;
+    let y = HY + Math.sin(t) * 66 * wave;
+    const nape = 348 + 3 * Math.sin(x * 0.35);
+    if (y > nape) y = nape;
+    outline.push([x, y]);
 }
-/** Three shrinking half-turns: reads as a ringlet at any size. */
-const spiral = (r: number) => {
-    const r1 = r * 0.62;
-    const r2 = r * 0.42;
-    const r3 = r * 0.24;
-    const p1 = -r1;
-    const p2 = p1 + 2 * r2;
-    const p3 = p2 - 2 * r3;
-    return `M${f1(r1)},0 A${f1(r1)},${f1(r1)} 0 0 1 ${f1(p1)},0 A${f1(r2)},${f1(r2)} 0 0 1 ${f1(p2)},0 A${f1(r3)},${f1(r3)} 0 0 1 ${f1(p3)},0`;
+const toPath = (pts: [number, number][]) => 'M' + pts.map((p) => `${f1(p[0])},${f1(p[1])}`).join(' L');
+const hairPath = toPath(outline) + ' Z';
+// The top half only, for the screen light on dark mode
+const rimPath = toPath(outline.slice(100, 201));
+
+type Strand = { d: string; dash: number };
+const strand = (ox: number, oy: number, a: number, len: number, k: number): Strand => {
+    const amp = 7 + seed(k + 640) * 3.5;
+    const ph = seed(k + 680) * Math.PI * 2;
+    const freq = 0.085 + seed(k + 720) * 0.02;
+    const pts: [number, number][] = [];
+    for (let d = 0; d <= len; d += 3) {
+        const off = amp * Math.sin(d * freq + ph) * Math.min(1, d / 16);
+        pts.push([
+            ox + Math.cos(a) * d - Math.sin(a) * off,
+            oy + Math.sin(a) * d + Math.cos(a) * off + 0.0035 * d * d
+        ]);
+    }
+    return { d: toPath(pts), dash: Math.round(seed(k + 760) * 20) };
 };
+const CROWN = { x: 324, y: 256 };
+const strands: Strand[] = [
+    ...Array.from({ length: 16 }, (_, i) => strand(CROWN.x, CROWN.y, (i / 16) * Math.PI * 2 + seed(i + 600) * 0.15, 120, i)),
+    ...Array.from({ length: 12 }, (_, i) => {
+        const a = (i / 12) * Math.PI * 2 + 0.26;
+        return strand(CROWN.x + Math.cos(a) * 26, CROWN.y + Math.sin(a) * 28, a + (seed(i + 800) - 0.5) * 0.25, 90, i + 100);
+    })
+];
 
 const notes = [
     { x: 516, y: 218, r: -8, c: '#ffe27a', text: 'ship it' },
@@ -285,10 +281,7 @@ const notes = [
                 <g class="head" data-head>
                     <defs>
                         <clipPath id="sc-hair-clip">
-                            <ellipse cx="320" cy="298" rx="50" ry="54" />
-                            {silhouette.map((b) => (
-                                <circle cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} />
-                            ))}
+                            <path d={hairPath} />
                         </clipPath>
                     </defs>
 
@@ -303,32 +296,22 @@ const notes = [
                     </g>
                     <path d="M272,318 C266,354 282,382 306,386 M368,318 C374,354 358,382 334,386" fill="none" stroke="var(--accent)" stroke-width="1.5" class="rim" />
 
-                    <!-- curls: dark cloud, then coils clipped to it -->
-                    <g fill="var(--sc-hair)">
-                        <ellipse cx="320" cy="298" rx="50" ry="54" />
-                        {silhouette.map((b) => (
-                            <circle cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} />
-                        ))}
+                    <!-- wavy curls: dark mass, then flowing strands clipped to it -->
+                    <path d={hairPath} fill="var(--sc-hair)" />
+                    <g clip-path="url(#sc-hair-clip)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <g stroke="var(--sc-hair-mid)" stroke-width="10">
+                            {strands.map((st) => (
+                                <path d={st.d} />
+                            ))}
+                        </g>
+                        <g stroke="var(--sc-hair-hi)" stroke-width="1.8" opacity="0.7">
+                            {strands.map((st) => (
+                                <path d={st.d} />
+                            ))}
+                        </g>
                     </g>
-                    <g clip-path="url(#sc-hair-clip)">
-                        {locks.map((l) => (
-                            <g transform={`translate(${f1(l.x)} ${f1(l.y)}) rotate(${l.a.toFixed(0)})`}>
-                                <circle r={f1(l.r)} fill="var(--sc-hair-mid)" stroke="var(--sc-hair)" stroke-width="1.6" />
-                                <path d={spiral(l.r)} fill="none" stroke="var(--sc-hair-hi)" stroke-width="1.9" stroke-linecap="round" />
-                            </g>
-                        ))}
-                    </g>
-                    <!-- screen light catching the outer curls -->
-                    <g fill="none" stroke="var(--accent)" stroke-width="1.6" class="rim">
-                        {[...ring.slice(4, 22), ...puffs].map((b) => {
-                            const a = Math.atan2(b.y - 298, b.x - 320);
-                            const x1 = b.x + Math.cos(a - 0.7) * b.r;
-                            const y1 = b.y + Math.sin(a - 0.7) * b.r;
-                            const x2 = b.x + Math.cos(a + 0.7) * b.r;
-                            const y2 = b.y + Math.sin(a + 0.7) * b.r;
-                            return <path d={`M${f1(x1)},${f1(y1)} A${f1(b.r)},${f1(b.r)} 0 0 1 ${f1(x2)},${f1(y2)}`} />;
-                        })}
-                    </g>
+                    <!-- screen light along the top of the waves -->
+                    <path d={rimPath} fill="none" stroke="var(--accent)" stroke-width="1.6" class="rim" />
 
                     <!-- headphones, band pressed into the curls -->
                     <path d="M263,324 C252,196 388,196 377,324" fill="none" stroke="var(--sc-phones)" stroke-width="7" stroke-linecap="round" />
