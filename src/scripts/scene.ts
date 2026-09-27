@@ -75,7 +75,7 @@ const C = {
     keyword: '#c792ea',
     annotation: '#ffcb6b',
     string: '#c3e88d',
-    type: '#82aaff',
+    type: '#ff8a8a',
     number: '#f78c6c',
     punct: '#89ddff',
     prompt: '#5be3b0',

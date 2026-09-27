@@ -22,21 +22,21 @@
     color-scheme: light;
     --dark: 0;
 
-    /* light palette: cool paper, ink, deep periwinkle */
-    --bg: #f3f5f9;
+    /* light palette: warm paper-grey, near-black ink, garnet */
+    --bg: #f7f5f4;
     --surface: #ffffff;
-    --surface-2: #e9edf4;
-    --line: #dde3ec;
-    --line-strong: #c3ccd9;
-    --text: #0d131a;
-    --muted: #566273;
-    --accent: #4a5fe0;
+    --surface-2: #efebea;
+    --line: #e5dfdd;
+    --line-strong: #d0c7c4;
+    --text: #16100f;
+    --muted: #6b5f5c;
+    --accent: #b4233a;
     --accent-ink: #ffffff;
-    --accent-soft: rgba(74, 95, 224, 0.1);
+    --accent-soft: rgba(180, 35, 58, 0.08);
     --live: #0c9c73;
-    --shadow: 0 1px 2px rgba(13, 19, 26, 0.04), 0 8px 24px -12px rgba(13, 19, 26, 0.12);
-    --shadow-lift: 0 2px 4px rgba(13, 19, 26, 0.04), 0 28px 60px -24px rgba(40, 56, 140, 0.32);
-    --glass: rgba(243, 245, 249, 0.72);
+    --shadow: 0 1px 2px rgba(22, 16, 15, 0.04), 0 8px 24px -12px rgba(22, 16, 15, 0.12);
+    --shadow-lift: 0 2px 4px rgba(22, 16, 15, 0.04), 0 28px 60px -24px rgba(140, 24, 44, 0.3);
+    --glass: rgba(247, 245, 244, 0.72);
 
     /* shape */
     --radius: 18px;
@@ -68,40 +68,40 @@
     :root:not([data-theme='light']) {
         color-scheme: dark;
         --dark: 1;
-        --bg: #0a0f14;
-        --surface: #10171f;
-        --surface-2: #16202b;
-        --line: #1f2b38;
-        --line-strong: #2c3b4b;
-        --text: #e7edf4;
-        --muted: #8c99aa;
-        --accent: #93a9ff;
-        --accent-ink: #0a0f14;
-        --accent-soft: rgba(147, 169, 255, 0.12);
+        --bg: #0f0c0c;
+        --surface: #171212;
+        --surface-2: #1f1818;
+        --line: #2a2121;
+        --line-strong: #3a2e2e;
+        --text: #f2ecea;
+        --muted: #a3938f;
+        --accent: #f0566a;
+        --accent-ink: #0f0c0c;
+        --accent-soft: rgba(240, 86, 106, 0.12);
         --live: #5be3b0;
         --shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 12px 30px -18px rgba(0, 0, 0, 0.7);
         --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 34px 70px -28px rgba(0, 0, 0, 0.85);
-        --glass: rgba(10, 15, 20, 0.72);
+        --glass: rgba(15, 12, 12, 0.72);
     }
 }
 
 :root[data-theme='dark'] {
     color-scheme: dark;
     --dark: 1;
-    --bg: #0a0f14;
-    --surface: #10171f;
-    --surface-2: #16202b;
-    --line: #1f2b38;
-    --line-strong: #2c3b4b;
-    --text: #e7edf4;
-    --muted: #8c99aa;
-    --accent: #93a9ff;
-    --accent-ink: #0a0f14;
-    --accent-soft: rgba(147, 169, 255, 0.12);
+    --bg: #0f0c0c;
+    --surface: #171212;
+    --surface-2: #1f1818;
+    --line: #2a2121;
+    --line-strong: #3a2e2e;
+    --text: #f2ecea;
+    --muted: #a3938f;
+    --accent: #f0566a;
+    --accent-ink: #0f0c0c;
+    --accent-soft: rgba(240, 86, 106, 0.12);
     --live: #5be3b0;
     --shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 12px 30px -18px rgba(0, 0, 0, 0.7);
     --shadow-lift: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 34px 70px -28px rgba(0, 0, 0, 0.85);
-    --glass: rgba(10, 15, 20, 0.72);
+    --glass: rgba(15, 12, 12, 0.72);
 }
 
 /* Theme switch: the circular reveal is the animation, so freeze

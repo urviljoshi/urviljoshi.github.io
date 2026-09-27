@@ -44,7 +44,7 @@ const notes = [
                 <stop offset="100%" stop-color="#ffd98a" stop-opacity="0" />
             </linearGradient>
             <linearGradient id="sc-rgb" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#93a9ff" />
+                <stop offset="0%" stop-color="#f0566a" />
                 <stop offset="50%" stop-color="#5be3b0" />
                 <stop offset="100%" stop-color="#ff9fb2" />
             </linearGradient>
@@ -136,9 +136,9 @@ const notes = [
                 <text x="182" y="190" class="tab" data-tab>TelemetryController.java</text>
                 <g data-gutter class="gutter"></g>
                 <g data-code class="code"></g>
-                <rect data-caret class="caret" x="192" y="201" width="5" height="10" fill="#93a9ff" />
+                <rect data-caret class="caret" x="192" y="201" width="5" height="10" fill="#f0566a" />
                 <!-- status bar -->
-                <rect x="162" y="368" width="316" height="9" fill="#1f2a44" />
+                <rect x="162" y="368" width="316" height="9" fill="#4a1c24" />
                 <text x="168" y="375" class="status">main</text>
                 <text x="472" y="375" class="status" text-anchor="end" data-status>Java · UTF-8</text>
             </g>
@@ -248,11 +248,11 @@ const notes = [
         /* light: daytime room */
         --sc-paper: #fbf8f2;
         --sc-frame: #2f3a4c;
-        --sc-sky: #cfe3ff;
+        --sc-sky: #f6dcd7;
         --sc-hill: #5a9e6f;
         --sc-tape: rgba(255, 255, 255, 0.7);
         --sc-wire: #9aa3b2;
-        --sc-b1: #93a9ff;
+        --sc-b1: #f0566a;
         --sc-b2: #ffb454;
         --sc-b3: #5be3b0;
         --sc-b4: #ff9fb2;
@@ -266,8 +266,8 @@ const notes = [
         --sc-leaf: #5a9e6f;
         --sc-leaf-2: #4a8a5e;
         --sc-case: #e6e9ef;
-        --sc-hoodie: #3a4a7a;
-        --sc-hood: #45568a;
+        --sc-hoodie: #34292b;
+        --sc-hood: #40353a;
         --sc-skin: #b57a55;
         --sc-hair: #1c1512;
         --sc-hair-hi: #3a2d26;
@@ -290,7 +290,7 @@ const notes = [
     :global(:root[data-theme='dark']) .scene {
         --sc-paper: #d9d4ca;
         --sc-frame: #0a0e14;
-        --sc-sky: #1f2b4a;
+        --sc-sky: #3a2530;
         --sc-hill: #2f5a45;
         --sc-tape: rgba(255, 255, 255, 0.35);
         --sc-wire: #3a4658;
@@ -304,8 +304,8 @@ const notes = [
         --sc-leaf: #3f7d55;
         --sc-leaf-2: #356b49;
         --sc-case: #1b222c;
-        --sc-hoodie: #26315a;
-        --sc-hood: #2f3b6a;
+        --sc-hoodie: #2a2224;
+        --sc-hood: #352b2d;
         --sc-skin: #8f5f43;
         --sc-hair: #120d0b;
         --sc-hair-hi: #2a211c;
@@ -322,7 +322,7 @@ const notes = [
         :global(:root:not([data-theme='light'])) .scene {
             --sc-paper: #d9d4ca;
             --sc-frame: #0a0e14;
-            --sc-sky: #1f2b4a;
+            --sc-sky: #3a2530;
             --sc-hill: #2f5a45;
             --sc-tape: rgba(255, 255, 255, 0.35);
             --sc-wire: #3a4658;
@@ -336,8 +336,8 @@ const notes = [
             --sc-leaf: #3f7d55;
             --sc-leaf-2: #356b49;
             --sc-case: #1b222c;
-            --sc-hoodie: #26315a;
-            --sc-hood: #2f3b6a;
+            --sc-hoodie: #2a2224;
+            --sc-hood: #352b2d;
             --sc-skin: #8f5f43;
             --sc-hair: #120d0b;
             --sc-hair-hi: #2a211c;
@@ -413,7 +413,7 @@ const notes = [
         fill: #8c99aa;
     }
     .status {
-        fill: #c7d2ff;
+        fill: #ffd0d6;
     }
     :global(.scene .gutter text) {
         font-family: var(--font-mono);
