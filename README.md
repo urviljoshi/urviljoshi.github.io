@@ -31,7 +31,7 @@ Node 22.12 or newer.
 ## Deploy
 
 `.github/workflows/deploy.yml` builds and publishes on every push to `main`,
-every day at 05:30 UTC, and on demand from the Actions tab. The daily run is
+every day at 04:00 IST (22:30 UTC), and on demand from the Actions tab. The daily run is
 what keeps the writing and video sections current: it refreshes the feeds
 before building, so new posts and videos appear without a commit. If a feed
 is unreachable the committed `data/feeds.json` is used and the deploy still
