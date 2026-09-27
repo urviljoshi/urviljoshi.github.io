@@ -20,10 +20,16 @@ const THUMBS = resolve(ROOT, 'public/thumbs');
 
 const MEDIUM_FEED = 'https://medium.com/feed/@urvvil08';
 const YT_CHANNEL_ID = 'UCh89P7Jv512B8YpAELZms2A';
-const YT_FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`;
+// YouTube keeps two auto-playlists per channel: UULF* holds only long-form
+// uploads and UUSH* only Shorts. Titles can't be trusted for this (plenty of
+// Shorts have no #shorts tag), so the split comes from YouTube itself.
+const YT_PLAYLIST = (prefix) => `https://www.youtube.com/feeds/videos.xml?playlist_id=${prefix}${YT_CHANNEL_ID.slice(2)}`;
+const YT_LONG = YT_PLAYLIST('UULF');
+const YT_SHORTS = YT_PLAYLIST('UUSH');
 
 const MAX_POSTS = 12;
 const MAX_VIDEOS = 12;
+const MAX_SHORTS = 12;
 
 const UA = 'Mozilla/5.0 (compatible; urvil.dev feed builder)';
 
@@ -96,8 +102,12 @@ function parseMedium(xml) {
         .slice(0, MAX_POSTS);
 }
 
-/** YouTube Atom -> video records. */
-function parseYouTube(xml) {
+/**
+ * YouTube Atom -> video records. Long-form gets a 16:9 frame; Shorts get
+ * YouTube's original-aspect 9:16 frame and a /shorts/ link.
+ */
+function parseYouTube(xml, kind) {
+    const short = kind === 'short';
     return blocks(xml, 'entry')
         .map((entry) => {
             const id = tag(entry, 'yt:videoId');
@@ -107,17 +117,16 @@ function parseYouTube(xml) {
             return {
                 id,
                 title,
-                url: `https://www.youtube.com/watch?v=${id}`,
-                thumbnail: `/thumbs/${id}.jpg`,
-                remoteThumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+                url: short ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`,
+                thumbnail: `/thumbs/${id}${short ? '-v' : ''}.webp`,
                 date: Number.isNaN(iso.valueOf()) ? null : iso.toISOString(),
                 views: Number.isFinite(views) ? views : 0,
-                short: /#shorts?\b/i.test(title)
+                short
             };
         })
         .filter((v) => v.id && v.title && v.date)
         .sort((a, b) => b.date.localeCompare(a.date))
-        .slice(0, MAX_VIDEOS);
+        .slice(0, short ? MAX_SHORTS : MAX_VIDEOS);
 }
 
 /* ---------------- main ---------------- */
@@ -127,45 +136,71 @@ async function previous() {
     try {
         return JSON.parse(await readFile(OUT, 'utf8'));
     } catch {
-        return { posts: [], videos: [] };
+        return { posts: [], videos: [], shorts: [] };
     }
 }
 
 /**
- * Mirror each video thumbnail into public/thumbs so the site never
- * hotlinks YouTube: faster first paint, no third-party request, and
- * canvas effects can read the pixels.
+ * Mirror each thumbnail into public/thumbs as a small WebP so the site
+ * never hotlinks YouTube: faster first paint and no third-party request.
+ * Sources are tried in order, since YouTube does not make every size for
+ * every video.
  */
-async function syncThumbnails(videos) {
-    await mkdir(THUMBS, { recursive: true });
-    const keep = new Set(videos.map((v) => `${v.id}.jpg`));
+const THUMB_SPEC = {
+    long: { size: [640, 360], sources: ['hq720.jpg', 'hqdefault.jpg'] },
+    short: { size: [360, 640], sources: ['oar2.jpg', 'hqdefault.jpg'] }
+};
 
-    for (const v of videos) {
-        const file = resolve(THUMBS, `${v.id}.jpg`);
+async function loadSharp() {
+    try {
+        return (await import('sharp')).default;
+    } catch {
+        return null;
+    }
+}
+
+async function syncThumbnails(items) {
+    await mkdir(THUMBS, { recursive: true });
+    const sharp = await loadSharp();
+    const keep = new Set(items.map((v) => v.thumbnail.replace('/thumbs/', '')));
+
+    for (const v of items) {
+        const file = resolve(THUMBS, v.thumbnail.replace('/thumbs/', ''));
         try {
             await access(file);
             continue; // already mirrored; thumbnails for a given id rarely change
         } catch {}
-        try {
-            const res = await fetch(v.remoteThumbnail, { headers: { 'User-Agent': UA } });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            await writeFile(file, Buffer.from(await res.arrayBuffer()));
-        } catch (err) {
-            console.error(`thumb ${v.id}: ${err.message}`);
+
+        const spec = THUMB_SPEC[v.short ? 'short' : 'long'];
+        let saved = false;
+        for (const name of spec.sources) {
+            try {
+                const res = await fetch(`https://i.ytimg.com/vi/${v.id}/${name}`, { headers: { 'User-Agent': UA } });
+                if (!res.ok) continue;
+                const raw = Buffer.from(await res.arrayBuffer());
+                const out = sharp
+                    ? await sharp(raw).resize(spec.size[0], spec.size[1], { fit: 'cover' }).webp({ quality: 78 }).toBuffer()
+                    : raw; // no sharp: ship the original rather than nothing
+                await writeFile(file, out);
+                saved = true;
+                break;
+            } catch {}
         }
+        if (!saved) console.error(`thumb ${v.id}: no source available`);
     }
 
     for (const name of await readdir(THUMBS)) {
-        if (name.endsWith('.jpg') && !keep.has(name)) await unlink(resolve(THUMBS, name));
+        if (!keep.has(name)) await unlink(resolve(THUMBS, name));
     }
 }
 
 async function main() {
     const prev = await previous();
 
-    const [postsResult, videosResult] = await Promise.allSettled([
+    const [postsResult, videosResult, shortsResult] = await Promise.allSettled([
         get(MEDIUM_FEED).then(parseMedium),
-        get(YT_FEED).then(parseYouTube)
+        get(YT_LONG).then((xml) => parseYouTube(xml, 'long')),
+        get(YT_SHORTS).then((xml) => parseYouTube(xml, 'short'))
     ]);
 
     let failed = 0;
@@ -186,15 +221,16 @@ async function main() {
         channel: { name: 'FluxStack', url: 'https://www.youtube.com/@fluxstack' },
         blog: { name: 'Medium', url: 'https://medium.com/@urvvil08' },
         posts: pick(postsResult, 'posts', 'medium'),
-        videos: pick(videosResult, 'videos', 'youtube')
+        videos: pick(videosResult, 'videos', 'youtube videos'),
+        shorts: pick(shortsResult, 'shorts', 'youtube shorts')
     };
 
     // Both feeds down and no cache: fail loudly rather than commit an empty file.
-    if (failed === 2 && !data.posts.length && !data.videos.length) {
-        throw new Error('both feeds failed and no cached data exists');
+    if (failed === 3 && !data.posts.length && !data.videos.length && !data.shorts.length) {
+        throw new Error('every feed failed and no cached data exists');
     }
 
-    await syncThumbnails(data.videos.filter((v) => v.remoteThumbnail));
+    await syncThumbnails([...data.videos, ...data.shorts]);
 
     await mkdir(dirname(OUT), { recursive: true });
     await writeFile(OUT, JSON.stringify(data, null, 2) + '\n', 'utf8');

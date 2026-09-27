@@ -1,64 +1,132 @@
 ---
-import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/content';
+import { videos, shorts, channel, fmtDate, compactViews, cleanTitle } from '../data/content';
+
+const groups = [
+    {
+        id: 'long',
+        title: 'Videos',
+        blurb: 'Deep dives and builds',
+        items: videos,
+        more: { href: channel.url, label: 'Channel', title: 'Everything on FluxStack', cta: 'Subscribe' }
+    },
+    {
+        id: 'shorts',
+        title: 'Shorts',
+        blurb: 'One idea in under a minute',
+        items: shorts,
+        more: { href: `${channel.url}/shorts`, label: 'Shorts', title: 'All Shorts', cta: 'Watch' }
+    }
+].filter((g) => g.items.length);
 ---
 
 <section class="section videos" id="videos" data-section="videos">
     <div class="wrap">
-        <header class="videos-head">
-            <div class="section-head">
-                <p class="label" data-reveal>FluxStack on YouTube</p>
-                <h2 class="section-title" data-split>Ideas, taken apart <em>on camera</em>.</h2>
-            </div>
-            <div class="rail-controls" data-reveal>
-                <button class="rail-btn" type="button" data-rail-prev aria-label="Previous videos">&larr;</button>
-                <button class="rail-btn" type="button" data-rail-next aria-label="Next videos">&rarr;</button>
-            </div>
+        <header class="section-head">
+            <p class="label" data-reveal>FluxStack on YouTube</p>
+            <h2 class="section-title" data-split>Ideas, taken apart <em>on camera</em>.</h2>
         </header>
     </div>
 
-    <div class="rail" data-rail tabindex="0" aria-label="Recent videos">
-        {videos.map((v) => (
-            <a href={v.url} target="_blank" rel="noopener" class="vid" data-stagger-item>
-                <span class="vid-thumb" data-tilt data-tilt-max="8">
-                    <img src={v.thumbnail} alt="" width="480" height="360" loading="lazy" draggable="false" />
-                    {v.short && <span class="vid-badge label">Short</span>}
-                    <span class="vid-play" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
-                    </span>
-                </span>
-                <span class="vid-title">{cleanTitle(v.title)}</span>
-                <span class="vid-meta mono">
-                    <span>{fmtDate(v.date)}</span>
-                    {v.views > 0 && <span>{compactViews(v.views)} views</span>}
-                </span>
-            </a>
-        ))}
-        <a href={channel.url} target="_blank" rel="noopener" class="vid vid-more">
-            <span class="vid-more-inner card orbit" data-spotlight>
-                <span class="label">Channel</span>
-                <span class="vid-more-title">Everything on FluxStack</span>
-                <span class="btn btn-primary">Subscribe <span class="arrow" aria-hidden="true">&rarr;</span></span>
-            </span>
-        </a>
-    </div>
+    {groups.map((g) => (
+        <div class:list={['rail-group', `rail-group-${g.id}`]} data-rail-group>
+            <div class="wrap rail-head" data-reveal>
+                <div class="rail-heading">
+                    <h3 class="rail-title">
+                        {g.title} <span class="rail-count mono">{g.items.length}</span>
+                    </h3>
+                    <p class="rail-blurb">{g.blurb}</p>
+                </div>
+                <div class="rail-controls">
+                    <button class="rail-btn" type="button" data-rail-prev aria-label={`Previous ${g.title.toLowerCase()}`}>&larr;</button>
+                    <button class="rail-btn" type="button" data-rail-next aria-label={`Next ${g.title.toLowerCase()}`}>&rarr;</button>
+                </div>
+            </div>
 
-    <div class="wrap">
-        <div class="rail-bar" aria-hidden="true"><span data-rail-progress></span></div>
-    </div>
+            <div class:list={['rail', { 'rail-shorts': g.id === 'shorts' }]} data-rail tabindex="0" aria-label={`Recent ${g.title.toLowerCase()}`}>
+                {g.items.map((item) => (
+                    <a href={item.url} target="_blank" rel="noopener" class:list={['vid', { 'vid-short': item.short }]} data-stagger-item>
+                        <span class="vid-thumb" data-tilt data-tilt-max={item.short ? '10' : '8'}>
+                            <img
+                                src={item.thumbnail}
+                                alt=""
+                                width={item.short ? 360 : 640}
+                                height={item.short ? 640 : 360}
+                                loading="lazy"
+                                draggable="false"
+                            />
+                            <span class="vid-play" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg>
+                            </span>
+                        </span>
+                        <span class="vid-title">{cleanTitle(item.title)}</span>
+                        <span class="vid-meta mono">
+                            <span>{fmtDate(item.date)}</span>
+                            {item.views > 0 && <span>{compactViews(item.views)} views</span>}
+                        </span>
+                    </a>
+                ))}
+                <a href={g.more.href} target="_blank" rel="noopener" class:list={['vid', 'vid-more', { 'vid-short': g.id === 'shorts' }]}>
+                    <span class="vid-more-inner card orbit" data-spotlight>
+                        <span class="label">{g.more.label}</span>
+                        <span class="vid-more-title">{g.more.title}</span>
+                        <span class="btn btn-primary">
+                            {g.more.cta} <span class="arrow" aria-hidden="true">&rarr;</span>
+                        </span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="wrap">
+                <div class="rail-bar" aria-hidden="true"><span data-rail-progress></span></div>
+            </div>
+        </div>
+    ))}
 </section>
 
 <style>
-    .videos-head {
+    .rail-group + .rail-group {
+        margin-top: clamp(56px, 8vw, 104px);
+    }
+
+    .rail-head {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .rail-heading {
+        display: grid;
+        gap: 4px;
+    }
+
+    .rail-title {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+    }
+
+    .rail-count {
+        font-size: 0.8rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--muted);
+    }
+
+    .rail-blurb {
+        color: var(--muted);
+        font-size: 0.95rem;
     }
 
     .rail-controls {
         display: flex;
         gap: 8px;
-        margin-bottom: clamp(40px, 6vw, 72px);
     }
 
     .rail-btn {
@@ -93,6 +161,42 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
         padding-block: 4px 12px;
         scrollbar-width: none;
         cursor: grab;
+    }
+
+    /* Shorts: narrow, phone-shaped cards */
+    .rail-shorts {
+        --card: clamp(150px, 15vw, 210px);
+        gap: 16px;
+    }
+
+    .vid-short .vid-thumb {
+        aspect-ratio: 9 / 16;
+    }
+
+    .vid-short .vid-title {
+        font-size: 0.9rem;
+    }
+
+    .vid-short .vid-meta {
+        gap: 10px;
+        font-size: 0.72rem;
+    }
+
+    .vid-short .vid-play {
+        width: 40px;
+        height: 40px;
+        right: 10px;
+        bottom: 10px;
+    }
+
+    .vid-short .vid-more-title {
+        font-size: 1.25rem;
+    }
+
+    .vid-short.vid-more .vid-more-inner {
+        aspect-ratio: 9 / 16;
+        min-height: 0;
+        padding: 20px;
     }
 
     .rail::-webkit-scrollbar {
@@ -144,18 +248,6 @@ import { videos, channel, fmtDate, compactViews, cleanTitle } from '../data/cont
         box-shadow: var(--shadow-lift);
     }
 
-    .vid-badge {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        padding: 4px 9px;
-        border-radius: var(--radius-pill);
-        background: color-mix(in srgb, var(--bg) 70%, transparent);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        color: var(--text);
-        transition: border-radius var(--swap);
-    }
 
     .vid-play {
         position: absolute;

@@ -170,6 +170,7 @@ type Video = { id: string; title: string; url: string; thumbnail: string; date: 
 
 export const posts = (feeds.posts ?? []) as Post[];
 export const videos = (feeds.videos ?? []) as Video[];
+export const shorts = ((feeds as { shorts?: Video[] }).shorts ?? []) as Video[];
 export const channel = feeds.channel;
 
 /* ---------------- helpers ---------------- */

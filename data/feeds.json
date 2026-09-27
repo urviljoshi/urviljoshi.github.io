@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-27T14:27:41.273Z",
+  "generated": "2026-09-27T16:05:31.441Z",
   "channel": {
     "name": "FluxStack",
     "url": "https://www.youtube.com/@fluxstack"
@@ -108,11 +108,120 @@
   ],
   "videos": [
     {
+      "id": "NLyEoDtbmdw",
+      "title": "10 Claude Code Features Most Devs Don't Use (But Should)",
+      "url": "https://www.youtube.com/watch?v=NLyEoDtbmdw",
+      "thumbnail": "/thumbs/NLyEoDtbmdw.webp",
+      "date": "2026-06-22T06:35:26.000Z",
+      "views": 129,
+      "short": false
+    },
+    {
+      "id": "eqWGzIHNjyw",
+      "title": "I Built a AI Dev Workflow using Spec Driven Development #specdrivendevelopment #claudecode",
+      "url": "https://www.youtube.com/watch?v=eqWGzIHNjyw",
+      "thumbnail": "/thumbs/eqWGzIHNjyw.webp",
+      "date": "2026-05-26T02:30:19.000Z",
+      "views": 375,
+      "short": false
+    },
+    {
+      "id": "VEehKa__op8",
+      "title": "Pi Coding Agent: The Open-Source Tool That Modifies Itself #picodingagent #claudecode #opensourceai",
+      "url": "https://www.youtube.com/watch?v=VEehKa__op8",
+      "thumbnail": "/thumbs/VEehKa__op8.webp",
+      "date": "2026-05-07T06:08:07.000Z",
+      "views": 1064,
+      "short": false
+    },
+    {
+      "id": "51LURUiqGZA",
+      "title": "Minimal Agentic Dev Workflow: Issue to Merged PR (Full Demo) #claudecode #aiagents #springboot",
+      "url": "https://www.youtube.com/watch?v=51LURUiqGZA",
+      "thumbnail": "/thumbs/51LURUiqGZA.webp",
+      "date": "2026-04-28T12:30:07.000Z",
+      "views": 354,
+      "short": false
+    },
+    {
+      "id": "04z2M_Nv_Rk",
+      "title": "Karpathy's LLM Wiki Changes Everything #LLMWiki #andrejkarpathy #knowledgemanagement",
+      "url": "https://www.youtube.com/watch?v=04z2M_Nv_Rk",
+      "thumbnail": "/thumbs/04z2M_Nv_Rk.webp",
+      "date": "2026-04-20T04:30:01.000Z",
+      "views": 3789,
+      "short": false
+    },
+    {
+      "id": "xj2nn-RcOcY",
+      "title": "Karpathy's Auto Research and its application beyond ML #AutoResearch #andrejkarpathy",
+      "url": "https://www.youtube.com/watch?v=xj2nn-RcOcY",
+      "thumbnail": "/thumbs/xj2nn-RcOcY.webp",
+      "date": "2026-04-13T04:30:39.000Z",
+      "views": 104,
+      "short": false
+    },
+    {
+      "id": "CV5uBoA78qI",
+      "title": "Docker Model Runner Tutorial 2025: Run AI Models Locally in Minutes | Complete Guide",
+      "url": "https://www.youtube.com/watch?v=CV5uBoA78qI",
+      "thumbnail": "/thumbs/CV5uBoA78qI.webp",
+      "date": "2025-10-07T03:30:09.000Z",
+      "views": 654,
+      "short": false
+    },
+    {
+      "id": "d_xZgcRJ--Q",
+      "title": "10X Your Git Workflow: 7 Pro Tips [Git Productivity 2025] #GitTips #GitWorkflow",
+      "url": "https://www.youtube.com/watch?v=d_xZgcRJ--Q",
+      "thumbnail": "/thumbs/d_xZgcRJ--Q.webp",
+      "date": "2025-09-17T02:28:39.000Z",
+      "views": 454,
+      "short": false
+    },
+    {
+      "id": "1OBWOqu81Gw",
+      "title": "Turn Videos into ASCII Art | ASCII Video in terminal! 🖥️ #PythonTutorial #ASCIIArt #Coding #python",
+      "url": "https://www.youtube.com/watch?v=1OBWOqu81Gw",
+      "thumbnail": "/thumbs/1OBWOqu81Gw.webp",
+      "date": "2025-09-03T05:30:02.000Z",
+      "views": 1249,
+      "short": false
+    },
+    {
+      "id": "it4r-lDqQiY",
+      "title": "Save Hours with MCP Server: Auto-Resolve PRs with Copilot & Gemini",
+      "url": "https://www.youtube.com/watch?v=it4r-lDqQiY",
+      "thumbnail": "/thumbs/it4r-lDqQiY.webp",
+      "date": "2025-08-25T05:38:10.000Z",
+      "views": 597,
+      "short": false
+    },
+    {
+      "id": "o6sT1ne41kY",
+      "title": "AI Basics Every Developer Must Know: From Patterns to RAG (2025)",
+      "url": "https://www.youtube.com/watch?v=o6sT1ne41kY",
+      "thumbnail": "/thumbs/o6sT1ne41kY.webp",
+      "date": "2025-07-01T02:27:50.000Z",
+      "views": 92,
+      "short": false
+    },
+    {
+      "id": "ComP5bCNIv0",
+      "title": "GitHub Copilot Guide 2025: Master GitHub Copilot from Beginner to Pro!",
+      "url": "https://www.youtube.com/watch?v=ComP5bCNIv0",
+      "thumbnail": "/thumbs/ComP5bCNIv0.webp",
+      "date": "2025-06-14T02:26:22.000Z",
+      "views": 1192,
+      "short": false
+    }
+  ],
+  "shorts": [
+    {
       "id": "nRSikmfa8-M",
       "title": "Claude Opus 5 Made Me Perlin Noise Flow Field #claudeopus5 #claudeai #shorts",
-      "url": "https://www.youtube.com/watch?v=nRSikmfa8-M",
-      "thumbnail": "/thumbs/nRSikmfa8-M.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/nRSikmfa8-M/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/nRSikmfa8-M",
+      "thumbnail": "/thumbs/nRSikmfa8-M-v.webp",
       "date": "2026-07-25T23:30:18.000Z",
       "views": 249,
       "short": true
@@ -120,29 +229,26 @@
     {
       "id": "Ar6jPiyQPF8",
       "title": "I Made 3 AIs Rebuild My Coffee Timer ☕ You Pick the Winner (1, 2 or 3?) #claude #chatgpt #ai",
-      "url": "https://www.youtube.com/watch?v=Ar6jPiyQPF8",
-      "thumbnail": "/thumbs/Ar6jPiyQPF8.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/Ar6jPiyQPF8/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/Ar6jPiyQPF8",
+      "thumbnail": "/thumbs/Ar6jPiyQPF8-v.webp",
       "date": "2026-07-05T00:16:21.000Z",
       "views": 146,
-      "short": false
+      "short": true
     },
     {
       "id": "3DFJEGCKcJA",
       "title": "The Creator of Claude Code Doesn't Prompt Anymore #claudecode #promptengineering #aiagents",
-      "url": "https://www.youtube.com/watch?v=3DFJEGCKcJA",
-      "thumbnail": "/thumbs/3DFJEGCKcJA.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/3DFJEGCKcJA/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/3DFJEGCKcJA",
+      "thumbnail": "/thumbs/3DFJEGCKcJA-v.webp",
       "date": "2026-06-28T23:08:25.000Z",
       "views": 614,
-      "short": false
+      "short": true
     },
     {
       "id": "LW40ODqdEhA",
       "title": "I made Claude interrogate ME before it wrote any code 🔥 #shorts",
-      "url": "https://www.youtube.com/watch?v=LW40ODqdEhA",
-      "thumbnail": "/thumbs/LW40ODqdEhA.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/LW40ODqdEhA/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/LW40ODqdEhA",
+      "thumbnail": "/thumbs/LW40ODqdEhA-v.webp",
       "date": "2026-06-28T02:06:00.000Z",
       "views": 942,
       "short": true
@@ -150,29 +256,17 @@
     {
       "id": "W5VsRnvD0pQ",
       "title": "Claude Code Getting Dumber? Fix It (10 Features) #shorts",
-      "url": "https://www.youtube.com/watch?v=W5VsRnvD0pQ",
-      "thumbnail": "/thumbs/W5VsRnvD0pQ.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/W5VsRnvD0pQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/W5VsRnvD0pQ",
+      "thumbnail": "/thumbs/W5VsRnvD0pQ-v.webp",
       "date": "2026-06-24T19:30:19.000Z",
       "views": 836,
       "short": true
     },
     {
-      "id": "NLyEoDtbmdw",
-      "title": "10 Claude Code Features Most Devs Don't Use (But Should)",
-      "url": "https://www.youtube.com/watch?v=NLyEoDtbmdw",
-      "thumbnail": "/thumbs/NLyEoDtbmdw.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/NLyEoDtbmdw/hqdefault.jpg",
-      "date": "2026-06-22T06:35:26.000Z",
-      "views": 129,
-      "short": false
-    },
-    {
       "id": "wpSsVULBIxI",
       "title": "I Asked the New Claude Fable 5 to Code a Satisfying Simulation 🤯#shorts #fable5 #anthropic",
-      "url": "https://www.youtube.com/watch?v=wpSsVULBIxI",
-      "thumbnail": "/thumbs/wpSsVULBIxI.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/wpSsVULBIxI/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/wpSsVULBIxI",
+      "thumbnail": "/thumbs/wpSsVULBIxI-v.webp",
       "date": "2026-06-10T00:42:37.000Z",
       "views": 1025,
       "short": true
@@ -180,9 +274,8 @@
     {
       "id": "NF4pLEVLHRQ",
       "title": "Claude Code Dynamic Workflows: Create An Army Of Agents #shorts #claudecode #aicoding",
-      "url": "https://www.youtube.com/watch?v=NF4pLEVLHRQ",
-      "thumbnail": "/thumbs/NF4pLEVLHRQ.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/NF4pLEVLHRQ/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/NF4pLEVLHRQ",
+      "thumbnail": "/thumbs/NF4pLEVLHRQ-v.webp",
       "date": "2026-06-07T23:12:41.000Z",
       "views": 745,
       "short": true
@@ -190,9 +283,8 @@
     {
       "id": "BLdpDLoKys0",
       "title": "Your Claude Code terminal is BORING (30s fix) #shorts #claudecode",
-      "url": "https://www.youtube.com/watch?v=BLdpDLoKys0",
-      "thumbnail": "/thumbs/BLdpDLoKys0.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/BLdpDLoKys0/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/BLdpDLoKys0",
+      "thumbnail": "/thumbs/BLdpDLoKys0-v.webp",
       "date": "2026-06-06T02:19:15.000Z",
       "views": 498,
       "short": true
@@ -200,9 +292,8 @@
     {
       "id": "kCjJH4nzkFE",
       "title": "Stop guessing which AI your laptop can run 🤯#shorts #localllm #ollama",
-      "url": "https://www.youtube.com/watch?v=kCjJH4nzkFE",
-      "thumbnail": "/thumbs/kCjJH4nzkFE.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/kCjJH4nzkFE/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/kCjJH4nzkFE",
+      "thumbnail": "/thumbs/kCjJH4nzkFE-v.webp",
       "date": "2026-06-01T01:44:58.000Z",
       "views": 234,
       "short": true
@@ -210,22 +301,29 @@
     {
       "id": "FpIYc5o-bx4",
       "title": "Two HTTP requests just broke my refund endpoint #shorts #claudecode #specdrivendevelopment",
-      "url": "https://www.youtube.com/watch?v=FpIYc5o-bx4",
-      "thumbnail": "/thumbs/FpIYc5o-bx4.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/FpIYc5o-bx4/hqdefault.jpg",
+      "url": "https://www.youtube.com/shorts/FpIYc5o-bx4",
+      "thumbnail": "/thumbs/FpIYc5o-bx4-v.webp",
       "date": "2026-05-28T23:40:41.000Z",
       "views": 1280,
       "short": true
     },
     {
-      "id": "eqWGzIHNjyw",
-      "title": "I Built a AI Dev Workflow using Spec Driven Development #specdrivendevelopment #claudecode",
-      "url": "https://www.youtube.com/watch?v=eqWGzIHNjyw",
-      "thumbnail": "/thumbs/eqWGzIHNjyw.jpg",
-      "remoteThumbnail": "https://i.ytimg.com/vi/eqWGzIHNjyw/hqdefault.jpg",
-      "date": "2026-05-26T02:30:19.000Z",
-      "views": 375,
-      "short": false
+      "id": "VC9Ag4K_1Vc",
+      "title": "Stop Burning Tokens on Claude Code (Free Tool) 🔥 #shorts #claudecode #cursor",
+      "url": "https://www.youtube.com/shorts/VC9Ag4K_1Vc",
+      "thumbnail": "/thumbs/VC9Ag4K_1Vc-v.webp",
+      "date": "2026-05-20T21:16:21.000Z",
+      "views": 1426,
+      "short": true
+    },
+    {
+      "id": "pw4aJBQ6prs",
+      "title": "Claude Code /goal killed \"keep going\" #claudecode #aicoding #anthropic #devtools #shorts",
+      "url": "https://www.youtube.com/shorts/pw4aJBQ6prs",
+      "thumbnail": "/thumbs/pw4aJBQ6prs-v.webp",
+      "date": "2026-05-16T02:44:02.000Z",
+      "views": 1661,
+      "short": true
     }
   ]
 }

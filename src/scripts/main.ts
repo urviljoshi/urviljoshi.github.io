@@ -136,17 +136,18 @@ function reveals() {
         ScrollTrigger.create({ trigger: card, start: 'top 80%', once: true, onEnter: () => sheen(card, 0.5) });
     });
 
-    const vids = $$('[data-stagger-item]');
-    if (vids.length) {
+    $$('[data-rail]').forEach((railEl) => {
+        const vids = $$('[data-stagger-item]', railEl);
+        if (!vids.length) return;
         gsap.from(vids, {
             '--ry': '40px',
             opacity: 0,
             duration: 1.1,
             stagger: 0.06,
             ease: 'expo.out',
-            scrollTrigger: { trigger: '[data-rail]', start: 'top 88%', once: true }
+            scrollTrigger: { trigger: railEl, start: 'top 88%', once: true }
         });
-    }
+    });
 }
 
 /* ---------------- nav: hide on scroll down, progress, active section ---------------- */
@@ -306,12 +307,16 @@ function careerScrub() {
     });
 }
 
-/* ---------------- video rail ---------------- */
+/* ---------------- video rails ---------------- */
 
-function rail() {
-    const el = $('[data-rail]');
+function rails() {
+    $$('[data-rail-group]').forEach((group) => rail(group));
+}
+
+function rail(group: HTMLElement) {
+    const el = $('[data-rail]', group);
     if (!el) return;
-    const bar = $('[data-rail-progress]');
+    const bar = $('[data-rail-progress]', group);
 
     const sync = () => {
         if (!bar) return;
@@ -322,9 +327,9 @@ function rail() {
     addEventListener('resize', sync);
     sync();
 
-    const step = () => Math.max(280, el.clientWidth * 0.75);
-    $('[data-rail-prev]')?.addEventListener('click', () => el.scrollBy({ left: -step(), behavior: reduced ? 'auto' : 'smooth' }));
-    $('[data-rail-next]')?.addEventListener('click', () => el.scrollBy({ left: step(), behavior: reduced ? 'auto' : 'smooth' }));
+    const step = () => Math.max(240, el.clientWidth * 0.75);
+    $('[data-rail-prev]', group)?.addEventListener('click', () => el.scrollBy({ left: -step(), behavior: reduced ? 'auto' : 'smooth' }));
+    $('[data-rail-next]', group)?.addEventListener('click', () => el.scrollBy({ left: step(), behavior: reduced ? 'auto' : 'smooth' }));
 
     // Click-and-drag with a mouse; touch already scrolls natively
     let down = false;
@@ -556,7 +561,7 @@ async function boot() {
     careerScrub();
     reveals();
     navBehaviour();
-    rail();
+    rails();
     micro();
     tilt();
     parallax();
